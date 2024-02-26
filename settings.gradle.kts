@@ -15,3 +15,6 @@ dependencyResolutionManagement {
 
 rootProject.name = "CurrencyApp"
 include(":app")
+include(":presentation")
+include(":domain")
+include(":data")
