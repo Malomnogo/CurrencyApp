@@ -2,7 +2,7 @@ package com.malomnogo.domain
 
 interface LoadCurrenciesRepository {
 
-    suspend fun fetchCurrencies()
+    suspend fun fetchCurrencies() : LoadCurrenciesResult
 }
 
 interface LoadCurrenciesResult {
@@ -11,14 +11,15 @@ interface LoadCurrenciesResult {
 
     interface Mapper {
 
-        fun mapSuccess(currencies: List<CurrencyCache>)
+        fun mapSuccess()
 
         fun mapError(message: String)
     }
 
-    data class Success(private val currencies: List<CurrencyCache>) : LoadCurrenciesResult {
+    object Success : LoadCurrenciesResult {
+
         override fun map(mapper: Mapper) {
-            mapper.mapSuccess(currencies)
+            mapper.mapSuccess()
         }
     }
 
