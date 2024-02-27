@@ -22,10 +22,6 @@ class FakeNavigation : Navigation {
         assertEquals(Screen.Empty, actual)
     }
 
-    override fun clear() {
-        actual = Screen.Empty
-    }
-
     override fun updateObserver(observer: UpdateUi<Screen>) {
         this.observer = observer
     }

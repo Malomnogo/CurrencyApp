@@ -1,9 +1,4 @@
-package com.malomnogo.domain
-
-interface LoadCurrenciesRepository {
-
-    suspend fun fetchCurrencies() : LoadCurrenciesResult
-}
+package com.malomnogo.domain.load
 
 interface LoadCurrenciesResult {
 

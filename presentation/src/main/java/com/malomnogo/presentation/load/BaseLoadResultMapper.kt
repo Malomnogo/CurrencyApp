@@ -1,6 +1,6 @@
 package com.malomnogo.presentation.load
 
-import com.malomnogo.domain.LoadCurrenciesResult
+import com.malomnogo.domain.load.LoadCurrenciesResult
 import com.malomnogo.presentation.core.UpdateUi
 import com.malomnogo.presentation.dashboard.DashboardScreen
 import com.malomnogo.presentation.main.Clear

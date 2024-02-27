@@ -1,10 +1,10 @@
 package com.malomnogo.data
 
+import com.malomnogo.data.load.BaseLoadCurrencyRepository
 import com.malomnogo.data.load.cache.CurrencyCache
 import com.malomnogo.data.load.cache.CurrencyCacheDataSource
 import com.malomnogo.data.load.cloud.LoadCurrencyCloudDataSource
-import com.malomnogo.data.load.BaseLoadCurrencyRepository
-import com.malomnogo.domain.LoadCurrenciesResult
+import com.malomnogo.domain.load.LoadCurrenciesResult
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Before
