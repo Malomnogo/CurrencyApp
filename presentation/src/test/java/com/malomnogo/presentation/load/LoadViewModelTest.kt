@@ -1,10 +1,9 @@
 package com.malomnogo.presentation.load
 
-import com.malomnogo.domain.LoadCurrenciesRepository
-import com.malomnogo.domain.LoadCurrenciesResult
+import com.malomnogo.domain.load.LoadCurrenciesRepository
+import com.malomnogo.domain.load.LoadCurrenciesResult
 import com.malomnogo.presentation.core.FakeClear
 import com.malomnogo.presentation.core.FakeRunAsync
-import com.malomnogo.presentation.core.UiObservable
 import com.malomnogo.presentation.core.UpdateUi
 import com.malomnogo.presentation.main.FakeNavigation
 import org.junit.Assert.assertEquals
@@ -93,7 +92,7 @@ private class FakeRepository : LoadCurrenciesRepository {
     }
 }
 
-private class FakeUiObservable : UiObservable<LoadUiState> {
+private class FakeUiObservable : LoadUiObservable {
 
     private var actualUiSate: LoadUiState = LoadUiState.Empty
     private var actualObserver: UpdateUi<LoadUiState> = UpdateUi.Empty()

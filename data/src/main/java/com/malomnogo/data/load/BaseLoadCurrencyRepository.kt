@@ -3,8 +3,8 @@ package com.malomnogo.data.load
 import com.malomnogo.data.ProvideResources
 import com.malomnogo.data.load.cache.CurrencyCacheDataSource
 import com.malomnogo.data.load.cloud.LoadCurrencyCloudDataSource
-import com.malomnogo.domain.LoadCurrenciesRepository
-import com.malomnogo.domain.LoadCurrenciesResult
+import com.malomnogo.domain.load.LoadCurrenciesRepository
+import com.malomnogo.domain.load.LoadCurrenciesResult
 import java.net.UnknownHostException
 
 class BaseLoadCurrencyRepository(

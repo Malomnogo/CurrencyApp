@@ -1,7 +1,7 @@
 package com.malomnogo.presentation.load
 
-import com.malomnogo.domain.LoadCurrenciesRepository
-import com.malomnogo.domain.LoadCurrenciesResult
+import com.malomnogo.domain.load.LoadCurrenciesRepository
+import com.malomnogo.domain.load.LoadCurrenciesResult
 import com.malomnogo.presentation.core.BaseViewModel
 import com.malomnogo.presentation.core.RunAsync
 import com.malomnogo.presentation.core.UpdateUi
