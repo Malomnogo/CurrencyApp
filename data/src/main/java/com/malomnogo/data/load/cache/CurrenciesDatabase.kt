@@ -6,5 +6,5 @@ import androidx.room.RoomDatabase
 @Database(entities = [CurrencyCache::class], version = 1, exportSchema = false)
 abstract class CurrenciesDatabase : RoomDatabase() {
 
-    abstract fun picturesDao(): CurrenciesDao
+    abstract fun currenciesDao(): CurrenciesDao
 }
