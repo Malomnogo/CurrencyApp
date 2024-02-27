@@ -26,7 +26,7 @@ class RoomTest {
         val context: Context = ApplicationProvider.getApplicationContext()
         db = Room.inMemoryDatabaseBuilder(context, CurrenciesDatabase::class.java)
             .allowMainThreadQueries().build()
-        dao = db.picturesDao()
+        dao = db.currenciesDao()
     }
 
     @After
