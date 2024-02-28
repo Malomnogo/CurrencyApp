@@ -1,6 +1,6 @@
-package com.malomnogo.data
+package com.malomnogo.data.load
 
-import com.malomnogo.data.load.BaseLoadCurrencyRepository
+import com.malomnogo.data.core.FakeProvideResources
 import com.malomnogo.data.load.cache.CurrencyCache
 import com.malomnogo.data.load.cache.CurrencyCacheDataSource
 import com.malomnogo.data.load.cloud.LoadCurrencyCloudDataSource
@@ -128,11 +128,4 @@ private class FakeLoadCurrencyCloudDataSource : LoadCurrencyCloudDataSource {
         else
             throw exception
     }
-}
-
-private class FakeProvideResources : ProvideResources {
-
-    override fun noInternetConnectionMessage() = "No internet connection"
-
-    override fun serviceUnavailableMessage() = "Service unavailable"
 }
