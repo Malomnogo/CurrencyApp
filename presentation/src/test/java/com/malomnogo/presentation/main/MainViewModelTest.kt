@@ -1,5 +1,6 @@
 package com.malomnogo.presentation.main
 
+import com.malomnogo.presentation.core.FakeNavigation
 import org.junit.Before
 import org.junit.Test
 

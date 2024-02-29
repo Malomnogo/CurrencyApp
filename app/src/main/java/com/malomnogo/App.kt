@@ -25,6 +25,5 @@ class App : Application(), ProvideViewModel {
         )
     }
 
-    override fun <T : CustomViewModel> viewModel(clazz: Class<T>): T =
-        factory.viewModel(clazz)
+    override fun <T : CustomViewModel> viewModel(clazz: Class<T>): T = factory.viewModel(clazz)
 }
