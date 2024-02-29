@@ -1,8 +1,10 @@
-package com.malomnogo.presentation.main
+package com.malomnogo.presentation.core
 
-import com.malomnogo.presentation.core.UpdateUi
 import com.malomnogo.presentation.dashboard.DashboardScreen
 import com.malomnogo.presentation.load.LoadScreen
+import com.malomnogo.presentation.main.Navigation
+import com.malomnogo.presentation.main.Screen
+import com.malomnogo.presentation.settings.SettingsScreen
 import org.junit.Assert.assertEquals
 
 class FakeNavigation : Navigation {
@@ -16,6 +18,10 @@ class FakeNavigation : Navigation {
 
     fun checkNavigateToDashboard() {
         assertEquals(DashboardScreen, actual)
+    }
+
+    fun checkNavigateToSettings() {
+        assertEquals(SettingsScreen, actual)
     }
 
     fun checkNotCalled() {

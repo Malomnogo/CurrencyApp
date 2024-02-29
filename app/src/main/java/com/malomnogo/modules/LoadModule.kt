@@ -13,7 +13,9 @@ class LoadModule(private val core: Core, private val clear: Clear) : Module<Load
     override fun viewModel() = LoadViewModel(
         repository = BaseLoadCurrencyRepository(
             cacheDataSource = CurrencyCacheDataSource.Base(core.provideDb().currenciesDao()),
-            cloudDataSource = LoadCurrencyCloudDataSource.Base(),
+            cloudDataSource = LoadCurrencyCloudDataSource.Base(
+                retrofit = core.provideRetrofit()
+            ),
             provideResources = core.provideResources()
         ),
         uiObservable = LoadUiObservable.Base(),

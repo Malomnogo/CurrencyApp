@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.malomnogo.presentation.core.BaseFragment
-import com.malomnogo.presentation.core.ProvideViewModel
 import com.malomnogo.presentation.core.UpdateUi
 import ru.easycode.presentation.databinding.FragmentLoadBinding
 
@@ -24,14 +23,14 @@ class LoadFragment : BaseFragment<FragmentLoadBinding, LoadViewModel>() {
         updateUi = object : UpdateUi<LoadUiState> {
             override fun updateUi(uiState: LoadUiState) {
                 uiState.update(
-                    progressBar = binding.progressBar,
-                    errorTextView = binding.errorTextView,
-                    retryButton = binding.retryButton
+                    progressBar = binding.progress.progressBar,
+                    errorTextView = binding.error.errorTextView,
+                    retryButton = binding.error.retryButton
                 )
             }
         }
 
-        binding.retryButton.setOnClickListener {
+        binding.error.retryButton.setOnClickListener {
             viewModel.load()
         }
 

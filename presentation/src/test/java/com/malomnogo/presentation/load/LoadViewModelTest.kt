@@ -3,9 +3,9 @@ package com.malomnogo.presentation.load
 import com.malomnogo.domain.load.LoadCurrenciesRepository
 import com.malomnogo.domain.load.LoadCurrenciesResult
 import com.malomnogo.presentation.core.FakeClear
+import com.malomnogo.presentation.core.FakeNavigation
 import com.malomnogo.presentation.core.FakeRunAsync
 import com.malomnogo.presentation.core.UpdateUi
-import com.malomnogo.presentation.main.FakeNavigation
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotEquals
 import org.junit.Before

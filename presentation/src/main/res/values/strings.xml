@@ -1,3 +1,4 @@
 <resources>
     <string name="retry">Retry</string>
+    <string name="empty_description">You don\'t have any selected pairs</string>
 </resources>
