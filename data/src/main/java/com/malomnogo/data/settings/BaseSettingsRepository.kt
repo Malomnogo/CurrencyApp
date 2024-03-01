@@ -1,13 +1,13 @@
 package com.malomnogo.data.settings
 
-import com.malomnogo.data.latestCurrency.cache.LatestCurrencyCache
-import com.malomnogo.data.latestCurrency.cache.LatestCurrencyCacheDataSource
+import com.malomnogo.data.dashboard.cache.CurrencyPairCache
+import com.malomnogo.data.dashboard.cache.CurrencyPairCacheDataSource
 import com.malomnogo.data.load.cache.CurrencyCacheDataSource
 import com.malomnogo.domain.settings.SettingsRepository
 
 class BaseSettingsRepository(
     private val allCacheDataSource: CurrencyCacheDataSource.Read,
-    private val favoriteCacheDataSource: LatestCurrencyCacheDataSource.Mutable
+    private val favoriteCacheDataSource: CurrencyPairCacheDataSource.Mutable
 ) : SettingsRepository {
 
     override suspend fun currencies() = allCacheDataSource.read().map { it.name }
@@ -22,7 +22,7 @@ class BaseSettingsRepository(
 
     override suspend fun save(from: String, to: String) {
         favoriteCacheDataSource.save(
-            LatestCurrencyCache(from = from, to = to)
+            CurrencyPairCache(from = from, to = to)
         )
     }
 }

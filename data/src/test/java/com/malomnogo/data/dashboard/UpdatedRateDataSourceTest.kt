@@ -1,8 +1,8 @@
-package com.malomnogo.data.latestCurrency
+package com.malomnogo.data.dashboard
 
-import com.malomnogo.data.latestCurrency.cache.LatestCurrencyCache
-import com.malomnogo.data.latestCurrency.cache.LatestCurrencyCacheDataSource
-import com.malomnogo.data.latestCurrency.cloud.LatestCurrencyCloudDataSource
+import com.malomnogo.data.dashboard.cache.CurrencyPairCache
+import com.malomnogo.data.dashboard.cache.CurrencyPairCacheDataSource
+import com.malomnogo.data.dashboard.cloud.CurrencyRateCloudDataSource
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -11,12 +11,12 @@ import org.junit.Test
 class UpdatedRateDataSourceTest {
 
     private lateinit var updateRate: UpdatedRateDataSource.Base
-    private lateinit var cloudDataSource: FakeLatestCurrencyCloudDataSource
+    private lateinit var cloudDataSource: FakeCurrencyRateCloudDataSource
     private lateinit var cacheDataSource: FakeLatestCurrencyCacheDataSource
 
     @Before
     fun setup() {
-        cloudDataSource = FakeLatestCurrencyCloudDataSource()
+        cloudDataSource = FakeCurrencyRateCloudDataSource()
         cacheDataSource = FakeLatestCurrencyCacheDataSource()
         updateRate = UpdatedRateDataSource.Base(
             currentTimeInMillis = FakeCurrentTimeInMillis(1234L),
@@ -28,7 +28,7 @@ class UpdatedRateDataSourceTest {
     @Test
     fun test() = runBlocking {
         val actual = updateRate.updatedRate(
-            LatestCurrencyCache(
+            CurrencyPairCache(
                 from = "A",
                 to = "B",
                 rate = -1.0,
@@ -39,7 +39,7 @@ class UpdatedRateDataSourceTest {
         assertEquals(expected, actual, 0.001)
         cloudDataSource.check("A", "B")
         cacheDataSource.check(
-            LatestCurrencyCache(
+            CurrencyPairCache(
                 from = "A",
                 to = "B",
                 rate = 123.0,
@@ -49,7 +49,7 @@ class UpdatedRateDataSourceTest {
     }
 }
 
-private class FakeLatestCurrencyCloudDataSource : LatestCurrencyCloudDataSource {
+private class FakeCurrencyRateCloudDataSource : CurrencyRateCloudDataSource {
 
     private lateinit var result: String
 
@@ -63,15 +63,15 @@ private class FakeLatestCurrencyCloudDataSource : LatestCurrencyCloudDataSource 
     }
 }
 
-private class FakeLatestCurrencyCacheDataSource : LatestCurrencyCacheDataSource.Save {
+private class FakeLatestCurrencyCacheDataSource : CurrencyPairCacheDataSource.Save {
 
-    private lateinit var actual: LatestCurrencyCache
+    private lateinit var actual: CurrencyPairCache
 
-    override suspend fun save(currency: LatestCurrencyCache) {
+    override suspend fun save(currency: CurrencyPairCache) {
         actual = currency
     }
 
-    fun check(expected: LatestCurrencyCache) {
+    fun check(expected: CurrencyPairCache) {
         assertEquals(expected, actual)
     }
 }

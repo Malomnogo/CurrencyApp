@@ -1,4 +1,4 @@
-package com.malomnogo.data.latestCurrency
+package com.malomnogo.data.dashboard
 
 import java.util.concurrent.TimeUnit
 

@@ -1,7 +1,7 @@
 package com.malomnogo.data.settings
 
-import com.malomnogo.data.latestCurrency.cache.LatestCurrencyCache
-import com.malomnogo.data.latestCurrency.cache.LatestCurrencyCacheDataSource
+import com.malomnogo.data.dashboard.cache.CurrencyPairCache
+import com.malomnogo.data.dashboard.cache.CurrencyPairCacheDataSource
 import com.malomnogo.data.load.cache.CurrencyCache
 import com.malomnogo.data.load.cache.CurrencyCacheDataSource
 import kotlinx.coroutines.runBlocking
@@ -37,13 +37,13 @@ class BaseSettingsRepositoryTest {
     fun save() = runBlocking {
         repository.save(from = "A", to = "B")
         favoriteCacheDataSource.checkSaved(
-            listOf(LatestCurrencyCache(from = "A", to = "B"))
+            listOf(CurrencyPairCache(from = "A", to = "B"))
         )
         repository.save(from = "C", to = "D")
         favoriteCacheDataSource.checkSaved(
             listOf(
-                LatestCurrencyCache(from = "A", to = "B"),
-                LatestCurrencyCache(from = "C", to = "D")
+                CurrencyPairCache(from = "A", to = "B"),
+                CurrencyPairCache(from = "C", to = "D")
             )
         )
     }
@@ -73,17 +73,17 @@ private class FakeCurrencyCacheDataSource : CurrencyCacheDataSource.Read {
     )
 }
 
-private class FakeLatestCurrencyCacheDataSource : LatestCurrencyCacheDataSource.Mutable {
+private class FakeLatestCurrencyCacheDataSource : CurrencyPairCacheDataSource.Mutable {
 
-    private var actual = mutableListOf<LatestCurrencyCache>()
+    private val actual = mutableListOf<CurrencyPairCache>()
 
-    override suspend fun save(currency: LatestCurrencyCache) {
+    override suspend fun save(currency: CurrencyPairCache) {
         actual.add(currency)
     }
 
     override suspend fun read() = actual
 
-    fun checkSaved(expected: List<LatestCurrencyCache>) {
+    fun checkSaved(expected: List<CurrencyPairCache>) {
         assertEquals(expected, actual)
     }
 }

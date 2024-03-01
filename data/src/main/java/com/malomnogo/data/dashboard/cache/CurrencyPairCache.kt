@@ -1,12 +1,12 @@
-package com.malomnogo.data.latestCurrency.cache
+package com.malomnogo.data.dashboard.cache
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
-import com.malomnogo.data.latestCurrency.CurrentTimeInMillis
+import com.malomnogo.data.dashboard.CurrentTimeInMillis
 import java.util.concurrent.TimeUnit
 
 @Entity(tableName = "currency_table", primaryKeys = ["from", "to"])
-data class LatestCurrencyCache(
+data class CurrencyPairCache(
     @ColumnInfo("from")
     val from: String,
     @ColumnInfo("to")

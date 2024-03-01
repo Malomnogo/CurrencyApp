@@ -1,12 +1,12 @@
-package com.malomnogo.data.latestCurrency
+package com.malomnogo.data.dashboard
 
 import com.malomnogo.data.core.HandleError
-import com.malomnogo.data.latestCurrency.cache.LatestCurrencyCacheDataSource
+import com.malomnogo.data.dashboard.cache.CurrencyPairCacheDataSource
 import com.malomnogo.domain.dashboard.DashboardRepository
 import com.malomnogo.domain.dashboard.DashboardResult
 
 class BaseDashboardRepository(
-    private val cacheDataSource: LatestCurrencyCacheDataSource.Read,
+    private val cacheDataSource: CurrencyPairCacheDataSource.Read,
     private val currencyPairRatesDataSource: CurrencyPairRatesDataSource,
     private val handleError: HandleError
 ) : DashboardRepository {

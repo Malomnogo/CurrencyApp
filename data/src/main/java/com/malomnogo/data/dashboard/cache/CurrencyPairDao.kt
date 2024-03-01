@@ -1,4 +1,4 @@
-package com.malomnogo.data.latestCurrency.cache
+package com.malomnogo.data.dashboard.cache
 
 import androidx.room.Dao
 import androidx.room.Insert
@@ -6,11 +6,11 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 
 @Dao
-interface LatestCurrencyDao {
+interface CurrencyPairDao {
 
     @Query("select * from currency_table")
-    suspend fun favoriteRates(): List<LatestCurrencyCache>
+    suspend fun favoriteRates(): List<CurrencyPairCache>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(currency: LatestCurrencyCache)
+    suspend fun insert(currency: CurrencyPairCache)
 }
