@@ -1,18 +1,18 @@
-package com.malomnogo.data.latestCurrency
+package com.malomnogo.data.dashboard
 
-import com.malomnogo.data.latestCurrency.cache.LatestCurrencyCache
+import com.malomnogo.data.dashboard.cache.CurrencyPairCache
 import com.malomnogo.domain.dashboard.DashboardItem
 
 interface CurrencyPairRatesDataSource {
 
-    suspend fun data(favoriteRates: List<LatestCurrencyCache>): List<DashboardItem>
+    suspend fun data(favoriteRates: List<CurrencyPairCache>): List<DashboardItem>
 
     class Base(
         private val currentTimeInMillis: CurrentTimeInMillis,
         private val updatedRateDataSource: UpdatedRateDataSource
     ) : CurrencyPairRatesDataSource {
 
-        override suspend fun data(favoriteRates: List<LatestCurrencyCache>) =
+        override suspend fun data(favoriteRates: List<CurrencyPairCache>) =
             favoriteRates.map { favoriteRate ->
                 DashboardItem.Base(
                     from = favoriteRate.from,

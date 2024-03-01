@@ -2,12 +2,12 @@ package com.malomnogo.modules
 
 import com.malomnogo.Core
 import com.malomnogo.data.core.HandleError
-import com.malomnogo.data.latestCurrency.BaseDashboardRepository
-import com.malomnogo.data.latestCurrency.CurrencyPairRatesDataSource
-import com.malomnogo.data.latestCurrency.CurrentTimeInMillis
-import com.malomnogo.data.latestCurrency.UpdatedRateDataSource
-import com.malomnogo.data.latestCurrency.cache.LatestCurrencyCacheDataSource
-import com.malomnogo.data.latestCurrency.cloud.LatestCurrencyCloudDataSource
+import com.malomnogo.data.dashboard.BaseDashboardRepository
+import com.malomnogo.data.dashboard.CurrencyPairRatesDataSource
+import com.malomnogo.data.dashboard.CurrentTimeInMillis
+import com.malomnogo.data.dashboard.UpdatedRateDataSource
+import com.malomnogo.data.dashboard.cache.CurrencyPairCacheDataSource
+import com.malomnogo.data.dashboard.cloud.CurrencyRateCloudDataSource
 import com.malomnogo.presentation.dashboard.DashboardUiObservable
 import com.malomnogo.presentation.dashboard.DashboardViewModel
 import com.malomnogo.presentation.main.Clear
@@ -19,7 +19,7 @@ class DashboardModule(
 
     override fun viewModel(): DashboardViewModel {
         val cacheDataSource =
-            LatestCurrencyCacheDataSource.Base(core.provideDb().latestCurrencyDao())
+            CurrencyPairCacheDataSource.Base(core.provideDb().latestCurrencyDao())
         val currentTimeInMillis = CurrentTimeInMillis.Base()
 
         return DashboardViewModel(
@@ -31,7 +31,7 @@ class DashboardModule(
                     currentTimeInMillis = currentTimeInMillis,
                     updatedRateDataSource = UpdatedRateDataSource.Base(
                         currentTimeInMillis = currentTimeInMillis,
-                        cloudDataSource = LatestCurrencyCloudDataSource.Base(
+                        cloudDataSource = CurrencyRateCloudDataSource.Base(
                             retrofit = core.provideRetrofit()
                         ),
                         cacheDataSource = cacheDataSource

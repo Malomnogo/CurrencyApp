@@ -1,4 +1,4 @@
-package com.malomnogo.data.latestCurrency
+package com.malomnogo.data.dashboard
 
 interface CurrentTimeInMillis {
 

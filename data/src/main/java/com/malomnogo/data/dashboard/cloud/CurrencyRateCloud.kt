@@ -1,8 +1,8 @@
-package com.malomnogo.data.latestCurrency.cloud
+package com.malomnogo.data.dashboard.cloud
 
 import com.google.gson.annotations.SerializedName
 
-data class LatestCurrencyCloud(
+data class CurrencyRateCloud(
     @SerializedName("rates")
     private val rates: HashMap<String, Double>
 ) {

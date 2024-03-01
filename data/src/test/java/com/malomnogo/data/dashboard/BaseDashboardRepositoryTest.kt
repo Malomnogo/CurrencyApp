@@ -1,9 +1,9 @@
-package com.malomnogo.data.latestCurrency
+package com.malomnogo.data.dashboard
 
 import com.malomnogo.data.core.FakeHandleError
 import com.malomnogo.data.core.FakeProvideResources
-import com.malomnogo.data.latestCurrency.cache.LatestCurrencyCache
-import com.malomnogo.data.latestCurrency.cache.LatestCurrencyCacheDataSource
+import com.malomnogo.data.dashboard.cache.CurrencyPairCache
+import com.malomnogo.data.dashboard.cache.CurrencyPairCacheDataSource
 import com.malomnogo.domain.dashboard.DashboardItem
 import com.malomnogo.domain.dashboard.DashboardResult
 import kotlinx.coroutines.runBlocking
@@ -60,9 +60,9 @@ class BaseDashboardRepositoryTest {
     }
 }
 
-private class FakeCacheDataSource : LatestCurrencyCacheDataSource.Read {
+private class FakeCacheDataSource : CurrencyPairCacheDataSource.Read {
 
-    private lateinit var data: List<LatestCurrencyCache>
+    private lateinit var data: List<CurrencyPairCache>
 
     override suspend fun read() = data
 
@@ -72,8 +72,8 @@ private class FakeCacheDataSource : LatestCurrencyCacheDataSource.Read {
 
     fun notEmpty() {
         data = listOf(
-            LatestCurrencyCache("A", "B", 1.0, 0L),
-            LatestCurrencyCache("C", "D", 2.0, 0L)
+            CurrencyPairCache("A", "B", 1.0, 0L),
+            CurrencyPairCache("C", "D", 2.0, 0L)
         )
     }
 }
@@ -90,7 +90,7 @@ private class FakeCurrencyPairRatesDataSource : CurrencyPairRatesDataSource {
         isSuccess = false
     }
 
-    override suspend fun data(favoriteRates: List<LatestCurrencyCache>) =
+    override suspend fun data(favoriteRates: List<CurrencyPairCache>) =
         if (isSuccess)
             favoriteRates.map {
                 DashboardItem.Base(

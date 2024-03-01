@@ -1,6 +1,6 @@
-package com.malomnogo.data.latestCurrency
+package com.malomnogo.data.dashboard
 
-import com.malomnogo.data.latestCurrency.cache.LatestCurrencyCache
+import com.malomnogo.data.dashboard.cache.CurrencyPairCache
 import com.malomnogo.domain.dashboard.DashboardItem
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
@@ -30,8 +30,8 @@ class CurrencyPairRatesDataSourceTest {
         )
         val actual = currencyPairRatesDataSource.data(
             listOf(
-                LatestCurrencyCache(from = "A", to = "B", 1.0, 0L),
-                LatestCurrencyCache(from = "B", to = "C", 2.0, 0L),
+                CurrencyPairCache(from = "A", to = "B", 1.0, 0L),
+                CurrencyPairCache(from = "B", to = "C", 2.0, 0L),
             )
         )
         assertEquals(expected, actual)
@@ -46,8 +46,8 @@ class CurrencyPairRatesDataSourceTest {
         )
         val actual = currencyPairRatesDataSource.data(
             listOf(
-                LatestCurrencyCache(from = "A", to = "B", 1.0, TimeUnit.HOURS.toMillis(24)),
-                LatestCurrencyCache(from = "B", to = "C", 2.0, TimeUnit.HOURS.toMillis(24)),
+                CurrencyPairCache(from = "A", to = "B", 1.0, TimeUnit.HOURS.toMillis(24)),
+                CurrencyPairCache(from = "B", to = "C", 2.0, TimeUnit.HOURS.toMillis(24)),
             )
         )
         assertEquals(expected, actual)
@@ -67,7 +67,7 @@ private class FakeUpdatedRateDataSource : UpdatedRateDataSource {
         assertEquals(false, isCalled)
     }
 
-    override suspend fun updatedRate(currentPair: LatestCurrencyCache): Double {
+    override suspend fun updatedRate(currentPair: CurrencyPairCache): Double {
         isCalled = true
         return currentPair.rate
     }
