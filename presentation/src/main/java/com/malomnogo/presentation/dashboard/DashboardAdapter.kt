@@ -11,15 +11,23 @@ import ru.easycode.presentation.databinding.ProgressBinding
 
 class DashboardAdapter(
     private val retry: Retry,
-    private val types: List<TypeUi> = listOf(
-        TypeUi.Base,
-        TypeUi.Progress,
-        TypeUi.Empty,
-        TypeUi.Error
+    private val types: List<DashboardTypeUi> = listOf(
+        DashboardTypeUi.Base,
+        DashboardTypeUi.Progress,
+        DashboardTypeUi.Empty,
+        DashboardTypeUi.Error
     )
 ) : RecyclerView.Adapter<DashboardAdapter.DashboardViewHolder>(), ShowList {
 
     private val currencies = mutableListOf<DashboardUi>()
+
+    override fun getItemViewType(position: Int): Int {
+        val type = currencies[position].type()
+        val index = types.indexOf(type)
+        if (index == -1)
+            throw IllegalStateException("Type $type is not included in the typeList $types")
+        return index
+    }
 
     override fun show(list: List<DashboardUi>) {
         val diffResult =
@@ -38,8 +46,7 @@ class DashboardAdapter(
         holder.bind(currencies[position])
     }
 
-    abstract class DashboardViewHolder(view: View) :
-        RecyclerView.ViewHolder(view) {
+    abstract class DashboardViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
         open fun bind(item: DashboardUi) = Unit
 
