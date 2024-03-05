@@ -7,14 +7,14 @@ import ru.easycode.presentation.databinding.EmptyBinding
 import ru.easycode.presentation.databinding.ErrorBinding
 import ru.easycode.presentation.databinding.ProgressBinding
 
-interface TypeUi {
+interface DashboardTypeUi {
 
     fun viewHolder(
         parent: ViewGroup,
         retry: Retry
     ): DashboardAdapter.DashboardViewHolder
 
-    object Base : TypeUi {
+    object Base : DashboardTypeUi {
 
         override fun viewHolder(parent: ViewGroup, retry: Retry) =
             DashboardAdapter.DashboardViewHolder.Base(
@@ -22,7 +22,7 @@ interface TypeUi {
             )
     }
 
-    object Empty : TypeUi {
+    object Empty : DashboardTypeUi {
 
         override fun viewHolder(parent: ViewGroup, retry: Retry) =
             DashboardAdapter.DashboardViewHolder.Empty(
@@ -32,7 +32,7 @@ interface TypeUi {
             )
     }
 
-    object Progress : TypeUi {
+    object Progress : DashboardTypeUi {
 
         override fun viewHolder(parent: ViewGroup, retry: Retry) =
             DashboardAdapter.DashboardViewHolder.Progress(
@@ -40,7 +40,7 @@ interface TypeUi {
             )
     }
 
-    object Error : TypeUi {
+    object Error : DashboardTypeUi {
 
         override fun viewHolder(parent: ViewGroup, retry: Retry) =
             DashboardAdapter.DashboardViewHolder.Error(
