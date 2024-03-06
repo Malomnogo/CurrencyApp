@@ -9,6 +9,7 @@ interface DashboardUi {
     fun type(): DashboardTypeUi
     fun show(binding: CurrencyPairBinding) = Unit
     fun show(errorBinding: ErrorBinding) = Unit
+    fun remove(clickActions: ClickActions) = Unit
 
     data class Base(
         private val pair: String, private val rate: String
@@ -17,6 +18,10 @@ interface DashboardUi {
         override fun id() = pair
 
         override fun type() = DashboardTypeUi.Base
+
+        override fun remove(clickActions: ClickActions) {
+            clickActions.remove(pair)
+        }
 
         override fun show(binding: CurrencyPairBinding) = with(binding) {
             pairTextView.text = pair

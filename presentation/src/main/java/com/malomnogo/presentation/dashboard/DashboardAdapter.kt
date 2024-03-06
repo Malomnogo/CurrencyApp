@@ -10,7 +10,7 @@ import ru.easycode.presentation.databinding.ErrorBinding
 import ru.easycode.presentation.databinding.ProgressBinding
 
 class DashboardAdapter(
-    private val retry: Retry,
+    private val clickActions: ClickActions,
     private val types: List<DashboardTypeUi> = listOf(
         DashboardTypeUi.Base,
         DashboardTypeUi.Progress,
@@ -38,7 +38,7 @@ class DashboardAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-        types[viewType].viewHolder(parent, retry)
+        types[viewType].viewHolder(parent, clickActions)
 
     override fun getItemCount() = currencies.size
 
@@ -54,7 +54,7 @@ class DashboardAdapter(
 
         class Empty(binding: EmptyBinding) : DashboardViewHolder(binding.root)
 
-        class Error(private val binding: ErrorBinding, private val clickListener: Retry) :
+        class Error(private val binding: ErrorBinding, private val clickListener: ClickActions) :
             DashboardViewHolder(binding.root) {
 
             override fun bind(item: DashboardUi) {
@@ -63,10 +63,16 @@ class DashboardAdapter(
             }
         }
 
-        class Base(private val binding: CurrencyPairBinding) : DashboardViewHolder(binding.root) {
+        class Base(
+            private val binding: CurrencyPairBinding,
+            private val clickListener: ClickActions
+        ) : DashboardViewHolder(binding.root) {
 
             override fun bind(item: DashboardUi) {
                 item.show(binding)
+                binding.deleteImageButton.setOnClickListener {
+                    item.remove(clickListener)
+                }
             }
         }
     }

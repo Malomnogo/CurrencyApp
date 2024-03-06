@@ -38,41 +38,53 @@ class DashboardViewModelTest {
     }
 
     @Test
-    fun testEmpty() {
+    fun test() {
         repository.empty()
         viewModel.load()
         observable.checkProgress()
         runAsync.returnResult()
         observable.checkEmpty()
-    }
 
-    @Test
-    fun testSuccessThenGoToSettings() {
-        repository.success()
-        viewModel.load()
-        observable.checkProgress()
-        runAsync.returnResult()
-        observable.checkSuccess()
-        viewModel.goToSettings()
-        navigation.checkNavigateToSettings()
-        clear.checkCalled(DashboardViewModel::class.java)
-    }
-
-    @Test
-    fun testErrorThenSuccess() {
         repository.error()
-
         viewModel.load()
         observable.checkProgress()
         runAsync.returnResult()
         observable.checkError()
 
         repository.success()
-        viewModel.retry()
+        viewModel.load()
         observable.checkProgress()
         runAsync.returnResult()
-        observable.checkSuccess()
+        observable.checkSuccess(
+            DashboardUiState.Base(
+                listOf(
+                    DashboardUi.Base(pair = "A/B", rate = "123,40"),
+                    DashboardUi.Base(pair = "C/D", rate = "567,80")
+                )
+            )
+        )
+
+        viewModel.remove("A/B")
+        runAsync.returnResult()
+        repository.checkedRemovedPair("A", "B")
+        observable.checkSuccess(
+            DashboardUiState.Base(
+                listOf(
+                    DashboardUi.Base(pair = "C/D", rate = "567,80")
+                )
+            )
+        )
+
+        viewModel.remove("C/D")
+        runAsync.returnResult()
+        repository.checkedRemovedPair("C", "D")
+        observable.checkEmpty()
+
+        viewModel.goToSettings()
+        navigation.checkNavigateToSettings()
+        clear.checkCalled(DashboardViewModel::class.java)
     }
+
 
     @Test
     fun lifecycle() {
@@ -113,12 +125,7 @@ private class FakeDashboardUiObservable : DashboardUiObservable {
         assertEquals(expected, actualUiSate)
     }
 
-    fun checkSuccess() {
-        val expected = DashboardUiState.Base(
-            listOf(
-                DashboardUi.Base(pair = "A/B", rate = "123.4")
-            )
-        )
+    fun checkSuccess(expected: DashboardUiState.Base) {
         assertEquals(expected, actualUiSate)
     }
 
@@ -140,16 +147,34 @@ private class FakeDashboardRepository : DashboardRepository {
 
     private lateinit var result: DashboardResult
 
+    private val actualSuccessList = mutableListOf(
+        DashboardItem.Base(from = "A", to = "B", rates = 123.4),
+        DashboardItem.Base(from = "C", to = "D", rates = 567.8)
+    )
+
+    private var removedPair = ""
+
     override suspend fun dashboardItems() = result
+
+    override suspend fun removePair(from: String, to: String): DashboardResult {
+        removedPair = "$from$to"
+        actualSuccessList.removeFirst()
+        return if (actualSuccessList.isEmpty())
+            DashboardResult.Empty
+        else
+            DashboardResult.Success(actualSuccessList)
+    }
+
+    fun checkedRemovedPair(from: String, to: String) {
+        assertEquals("$from$to", removedPair)
+    }
 
     fun empty() {
         result = DashboardResult.Empty
     }
 
     fun success() {
-        result = DashboardResult.Success(
-            listOf(DashboardItem.Base(from = "A", to = "B", rates = 123.4))
-        )
+        result = DashboardResult.Success(actualSuccessList)
     }
 
     fun error() {

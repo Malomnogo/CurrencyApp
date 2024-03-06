@@ -6,7 +6,7 @@ import com.malomnogo.domain.dashboard.DashboardRepository
 import com.malomnogo.domain.dashboard.DashboardResult
 
 class BaseDashboardRepository(
-    private val cacheDataSource: CurrencyPairCacheDataSource.Read,
+    private val cacheDataSource: CurrencyPairCacheDataSource.Mutable,
     private val currencyPairRatesDataSource: CurrencyPairRatesDataSource,
     private val handleError: HandleError
 ) : DashboardRepository {
@@ -20,5 +20,10 @@ class BaseDashboardRepository(
         } catch (e: Exception) {
             DashboardResult.Error(handleError.handleError(e))
         }
+    }
+
+    override suspend fun removePair(from: String, to: String): DashboardResult {
+        cacheDataSource.remove(from, to)
+        return dashboardItems()
     }
 }

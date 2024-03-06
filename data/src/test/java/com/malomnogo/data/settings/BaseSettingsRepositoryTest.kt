@@ -12,13 +12,13 @@ import org.junit.Test
 class BaseSettingsRepositoryTest {
 
     private lateinit var allCacheDataSource: FakeCurrencyCacheDataSource
-    private lateinit var favoriteCacheDataSource: FakeLatestCurrencyCacheDataSource
+    private lateinit var favoriteCacheDataSource: FakeCurrencyPairCacheDataSource
     private lateinit var repository: BaseSettingsRepository
 
     @Before
     fun setup() {
         allCacheDataSource = FakeCurrencyCacheDataSource()
-        favoriteCacheDataSource = FakeLatestCurrencyCacheDataSource()
+        favoriteCacheDataSource = FakeCurrencyPairCacheDataSource()
 
         repository = BaseSettingsRepository(
             allCacheDataSource = allCacheDataSource,
@@ -73,13 +73,16 @@ private class FakeCurrencyCacheDataSource : CurrencyCacheDataSource.Read {
     )
 }
 
-private class FakeLatestCurrencyCacheDataSource : CurrencyPairCacheDataSource.Mutable {
+private class FakeCurrencyPairCacheDataSource : CurrencyPairCacheDataSource.Mutable {
 
     private val actual = mutableListOf<CurrencyPairCache>()
 
     override suspend fun save(currency: CurrencyPairCache) {
         actual.add(currency)
     }
+
+    //not used in test
+    override suspend fun remove(from: String, to: String) = Unit
 
     override suspend fun read() = actual
 

@@ -15,8 +15,9 @@ class DashboardViewModel(
     private val repository: DashboardRepository,
     private val clear: Clear,
     runAsync: RunAsync,
-    private val mapper: DashboardResult.Mapper = BaseDashboardResultMapper(observable)
-) : BaseViewModel(runAsync), Retry {
+    private val mapper: DashboardResult.Mapper = BaseDashboardResultMapper(observable),
+    private val delimiter: Delimiter.Split = Delimiter.Base()
+) : BaseViewModel(runAsync), ClickActions {
 
     fun load() {
         observable.updateUi(DashboardUiState.Progress)
@@ -34,6 +35,15 @@ class DashboardViewModel(
 
     override fun retry() {
         load()
+    }
+
+    override fun remove(pair: String) {
+        runAsync({
+            val split = delimiter.split(pair)
+            repository.removePair(split.first, split.second)
+        }) {
+            it.map(mapper)
+        }
     }
 
     fun startGettingUpdates(observer: UpdateUi<DashboardUiState>) {
