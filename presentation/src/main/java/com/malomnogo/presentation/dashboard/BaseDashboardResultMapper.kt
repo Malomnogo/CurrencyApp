@@ -28,11 +28,12 @@ class BaseDashboardResultMapper(
 }
 
 class BaseDashboardItemMapper(
-    private val rateFormat: RateFormat = RateFormat.Base()
+    private val rateFormat: RateFormat = RateFormat.Base(),
+    private val delimiter: Delimiter.Create = Delimiter.Base()
 ) : DashboardItem.Mapper<DashboardUi> {
 
     override fun map(fromCurrency: String, toCurrency: String, rates: Double) =
-        DashboardUi.Base("$fromCurrency/$toCurrency", rateFormat.format(rates))
+        DashboardUi.Base(delimiter.create(fromCurrency, toCurrency), rateFormat.format(rates))
 }
 
 interface RateFormat {

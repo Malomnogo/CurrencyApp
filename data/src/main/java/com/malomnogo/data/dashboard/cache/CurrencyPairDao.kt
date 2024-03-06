@@ -1,6 +1,7 @@
 package com.malomnogo.data.dashboard.cache
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -13,4 +14,7 @@ interface CurrencyPairDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(currency: CurrencyPairCache)
+
+    @Delete
+    suspend fun remove(currency: CurrencyPairCache)
 }

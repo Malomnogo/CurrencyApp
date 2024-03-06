@@ -1,5 +1,6 @@
 package com.malomnogo.presentation.dashboard
 
-interface Retry {
+interface ClickActions {
     fun retry()
+    fun remove(pair: String)
 }

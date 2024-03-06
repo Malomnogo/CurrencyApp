@@ -58,20 +58,38 @@ class BaseDashboardRepositoryTest {
         val expected = repository.dashboardItems()
         assertEquals(expected, DashboardResult.Error("No internet connection"))
     }
+
+    @Test
+    fun testRemove() = runBlocking {
+        cacheDataSource.notEmpty()
+        val expected = repository.removePair("A", "B")
+        assertEquals(
+            expected, DashboardResult.Success(listOf(DashboardItem.Base("C", "D", 2.0)))
+        )
+    }
 }
 
-private class FakeCacheDataSource : CurrencyPairCacheDataSource.Read {
+private class FakeCacheDataSource : CurrencyPairCacheDataSource.Mutable {
 
-    private lateinit var data: List<CurrencyPairCache>
+    private lateinit var data: MutableList<CurrencyPairCache>
+
+    //not used in test
+    override suspend fun save(currency: CurrencyPairCache) = Unit
+
+    override suspend fun remove(from: String, to: String) {
+        data.remove(
+            CurrencyPairCache(from, to, 1.0, 0L),
+        )
+    }
 
     override suspend fun read() = data
 
     fun empty() {
-        data = listOf()
+        data = mutableListOf()
     }
 
     fun notEmpty() {
-        data = listOf(
+        data = mutableListOf(
             CurrencyPairCache("A", "B", 1.0, 0L),
             CurrencyPairCache("C", "D", 2.0, 0L)
         )
@@ -98,5 +116,6 @@ private class FakeCurrencyPairRatesDataSource : CurrencyPairRatesDataSource {
                     it.to,
                     it.rate
                 )
-            } else throw UnknownHostException()
+            } else
+            throw UnknownHostException()
 }
