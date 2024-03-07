@@ -2,8 +2,8 @@ package com.malomnogo.data.settings
 
 import com.malomnogo.data.dashboard.cache.CurrencyPairCache
 import com.malomnogo.data.dashboard.cache.CurrencyPairCacheDataSource
+import com.malomnogo.data.load.cache.CurrenciesCacheDataSource
 import com.malomnogo.data.load.cache.CurrencyCache
-import com.malomnogo.data.load.cache.CurrencyCacheDataSource
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -63,7 +63,7 @@ class BaseSettingsRepositoryTest {
     }
 }
 
-private class FakeCurrencyCacheDataSource : CurrencyCacheDataSource.Read {
+private class FakeCurrencyCacheDataSource : CurrenciesCacheDataSource.Read {
 
     override suspend fun read() = listOf(
         CurrencyCache("A", "a"),

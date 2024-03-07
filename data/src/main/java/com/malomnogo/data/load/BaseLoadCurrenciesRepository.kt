@@ -1,15 +1,15 @@
 package com.malomnogo.data.load
 
 import com.malomnogo.data.ProvideResources
-import com.malomnogo.data.load.cache.CurrencyCacheDataSource
-import com.malomnogo.data.load.cloud.LoadCurrencyCloudDataSource
+import com.malomnogo.data.load.cache.CurrenciesCacheDataSource
+import com.malomnogo.data.load.cloud.LoadCurrenciesCloudDataSource
 import com.malomnogo.domain.load.LoadCurrenciesRepository
 import com.malomnogo.domain.load.LoadCurrenciesResult
 import java.net.UnknownHostException
 
-class BaseLoadCurrencyRepository(
-    private val cacheDataSource: CurrencyCacheDataSource.Mutable,
-    private val cloudDataSource: LoadCurrencyCloudDataSource,
+class BaseLoadCurrenciesRepository(
+    private val cacheDataSource: CurrenciesCacheDataSource.Mutable,
+    private val cloudDataSource: LoadCurrenciesCloudDataSource,
     private val provideResources: ProvideResources
 ) : LoadCurrenciesRepository {
 

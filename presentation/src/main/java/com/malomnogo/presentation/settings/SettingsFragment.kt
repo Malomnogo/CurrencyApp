@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import com.malomnogo.presentation.core.BaseFragment
 import com.malomnogo.presentation.core.UpdateUi
 import ru.easycode.presentation.databinding.FragmentSettingsBinding
@@ -12,6 +13,8 @@ class SettingsFragment : BaseFragment<FragmentSettingsBinding, SettingsViewModel
 
     private lateinit var updateUi: UpdateUi<SettingsUiState>
     override val viewModelClass = SettingsViewModel::class.java
+    private lateinit var fromAdapter: SettingsAdapter
+    private lateinit var toAdapter: SettingsAdapter
 
     override fun inflate(inflater: LayoutInflater, container: ViewGroup?) =
         FragmentSettingsBinding.inflate(inflater, container, false)
@@ -19,8 +22,8 @@ class SettingsFragment : BaseFragment<FragmentSettingsBinding, SettingsViewModel
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val fromAdapter = SettingsAdapter(choose = viewModel::choose)
-        val toAdapter = SettingsAdapter(choose = { to ->
+        fromAdapter = SettingsAdapter(choose = viewModel::choose)
+        toAdapter = SettingsAdapter(choose = { to ->
             viewModel.chooseDestination(from = fromAdapter.selected(), to = to)
         })
 
@@ -35,13 +38,27 @@ class SettingsFragment : BaseFragment<FragmentSettingsBinding, SettingsViewModel
             viewModel.navigateToDashboard()
         }
 
-        viewModel.init()
+        viewModel.init(BundleWrapper.Base(savedInstanceState))
 
         updateUi = object : UpdateUi<SettingsUiState> {
             override fun updateUi(uiState: SettingsUiState) {
                 uiState.show(fromAdapter, toAdapter, binding.saveButton)
             }
         }
+
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    viewModel.navigateToDashboard()
+                }
+            })
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        BundleWrapper.Base(outState)
+            .save(fromAdapter.selected(), toAdapter.selected())
     }
 
     override fun onResume() {

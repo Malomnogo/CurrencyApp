@@ -1,9 +1,9 @@
 package com.malomnogo.data.load
 
 import com.malomnogo.data.core.FakeProvideResources
+import com.malomnogo.data.load.cache.CurrenciesCacheDataSource
 import com.malomnogo.data.load.cache.CurrencyCache
-import com.malomnogo.data.load.cache.CurrencyCacheDataSource
-import com.malomnogo.data.load.cloud.LoadCurrencyCloudDataSource
+import com.malomnogo.data.load.cloud.LoadCurrenciesCloudDataSource
 import com.malomnogo.domain.load.LoadCurrenciesResult
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
@@ -11,19 +11,19 @@ import org.junit.Before
 import org.junit.Test
 import java.net.UnknownHostException
 
-class BaseLoadCurrencyRepositoryTest {
+class BaseLoadCurrenciesRepositoryTest {
 
-    private lateinit var repository: BaseLoadCurrencyRepository
+    private lateinit var repository: BaseLoadCurrenciesRepository
     private lateinit var cacheDataSource: FakeCurrencyCacheDataSource
-    private lateinit var cloudDataSource: FakeLoadCurrencyCloudDataSource
+    private lateinit var cloudDataSource: FakeLoadCurrenciesCloudDataSource
     private lateinit var provideResources: FakeProvideResources
 
     @Before
     fun setup() {
         cacheDataSource = FakeCurrencyCacheDataSource()
-        cloudDataSource = FakeLoadCurrencyCloudDataSource()
+        cloudDataSource = FakeLoadCurrenciesCloudDataSource()
         provideResources = FakeProvideResources()
-        repository = BaseLoadCurrencyRepository(
+        repository = BaseLoadCurrenciesRepository(
             cacheDataSource = cacheDataSource,
             cloudDataSource = cloudDataSource,
             provideResources = provideResources
@@ -74,7 +74,7 @@ class BaseLoadCurrencyRepositoryTest {
     }
 }
 
-private class FakeCurrencyCacheDataSource : CurrencyCacheDataSource.Mutable {
+private class FakeCurrencyCacheDataSource : CurrenciesCacheDataSource.Mutable {
 
     private val actualCurrencies = mutableMapOf<String, String>()
     private var haveCache = false
@@ -104,7 +104,7 @@ private class FakeCurrencyCacheDataSource : CurrencyCacheDataSource.Mutable {
         emptyList()
 }
 
-private class FakeLoadCurrencyCloudDataSource : LoadCurrencyCloudDataSource {
+private class FakeLoadCurrenciesCloudDataSource : LoadCurrenciesCloudDataSource {
 
     private var isSuccessResult: Boolean = false
 

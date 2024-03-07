@@ -18,6 +18,7 @@ class SettingsViewModelTest {
     private lateinit var repository: FakeSettingsRepository
     private lateinit var runAsync: FakeRunAsync
     private lateinit var clear: FakeClear
+    private lateinit var bundleWrapper: FakeBundleWrapper
 
     @Before
     fun setup() {
@@ -26,6 +27,7 @@ class SettingsViewModelTest {
         repository = FakeSettingsRepository()
         runAsync = FakeRunAsync()
         clear = FakeClear()
+        bundleWrapper = FakeBundleWrapper()
         viewModel = SettingsViewModel(
             navigation = navigation,
             observable = observable,
@@ -37,7 +39,7 @@ class SettingsViewModelTest {
 
     @Test
     fun test() {
-        viewModel.init()
+        viewModel.init(bundleWrapper)
         runAsync.returnResult()
         observable.checkInitial()
 
@@ -60,7 +62,7 @@ class SettingsViewModelTest {
         navigation.checkNavigateToDashboard()
         clear.checkCalled(SettingsViewModel::class.java)
 
-        viewModel.init()
+        viewModel.init(bundleWrapper)
         runAsync.returnResult()
         observable.checkInitial()
 
@@ -80,7 +82,7 @@ class SettingsViewModelTest {
         navigation.checkNavigateToDashboard()
         clear.checkCalled(SettingsViewModel::class.java)
 
-        viewModel.init()
+        viewModel.init(bundleWrapper)
         runAsync.returnResult()
         observable.checkInitial()
 
@@ -95,7 +97,8 @@ class SettingsViewModelTest {
 
     @Test
     fun lifecycle() {
-        viewModel.init()
+        bundleWrapper.isEmptyBundle = false
+        viewModel.init(bundleWrapper)
         navigation.checkNotCalled()
         val observer: UpdateUi<SettingsUiState> = object : UpdateUi<SettingsUiState> {
             override fun updateUi(uiState: SettingsUiState) = Unit
@@ -190,4 +193,19 @@ private class FakeSettingsRepository : SettingsRepository {
         val expected = "$from/$to"
         assertEquals(expected, actualPair)
     }
+}
+
+internal class FakeBundleWrapper : BundleWrapper.Mutable {
+
+    var isEmptyBundle = true
+
+    private var cache = Pair("A", "B")
+
+    override fun isEmpty() = isEmptyBundle
+
+    override fun save(from: String, to: String) {
+        cache = Pair(from, to)
+    }
+
+    override fun restore() = cache
 }

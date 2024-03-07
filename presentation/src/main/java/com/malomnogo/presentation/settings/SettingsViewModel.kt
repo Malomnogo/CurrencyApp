@@ -17,24 +17,29 @@ class SettingsViewModel(
     private val chooseMapper: ChooseMapper = ChooseMapper.Base()
 ) : BaseViewModel(runAsync) {
 
-    fun init() {
-        runAsync({
-            repository.currencies()
-        }) {
-            observable.updateUi(
-                SettingsUiState.Initial(
-                    it.map { currency ->
-                        CurrencyChoiceUi.Base(currency)
-                    }
+    fun init(bundleWrapper: BundleWrapper.Mutable) {
+        if (bundleWrapper.isEmpty())
+            runAsync({
+                repository.currencies()
+            }) {
+                observable.updateUi(
+                    SettingsUiState.Initial(it.map { currency -> CurrencyChoiceUi.Base(currency) })
                 )
-            )
+            }
+        else {
+            val (from, to) = bundleWrapper.restore()
+            choose(from)
+            if (to.isNotEmpty())
+                chooseDestination(from, to)
         }
     }
 
     fun choose(from: String) {
         runAsync({
             chooseMapper.map(from, repository.currencies(), repository.currenciesDestinations(from))
-        }) { observable.updateUi(it) }
+        }) {
+            observable.updateUi(it)
+        }
     }
 
     fun chooseDestination(from: String, to: String) {
