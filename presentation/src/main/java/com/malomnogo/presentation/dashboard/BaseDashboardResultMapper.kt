@@ -40,7 +40,8 @@ interface RateFormat {
 
     fun format(double: Double): String
 
-    class Base : RateFormat {
-        override fun format(double: Double) = String.format("%.2f", double)
+    class Base(private val format: String = "%.2f") : RateFormat {
+
+        override fun format(double: Double) = String.format(format, double)
     }
 }

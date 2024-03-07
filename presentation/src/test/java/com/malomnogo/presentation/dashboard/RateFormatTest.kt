@@ -7,9 +7,14 @@ class RateFormatTest {
 
     @Test
     fun test() {
-        val rateFormat = RateFormat.Base()
-        val expected = "1,23"
-        val actual = rateFormat.format(1.23456)
+        var rateFormat = RateFormat.Base(format = "%.2f")
+        var expected = "1,23"
+        var actual = rateFormat.format(1.23456)
+        assertEquals(expected, actual)
+
+        rateFormat = RateFormat.Base(format = "%.3f")
+        expected = "7,891"
+        actual = rateFormat.format(7.8910)
         assertEquals(expected, actual)
     }
 }
