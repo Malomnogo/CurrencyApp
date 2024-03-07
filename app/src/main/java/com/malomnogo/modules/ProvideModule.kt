@@ -1,6 +1,7 @@
 package com.malomnogo.modules
 
 import com.malomnogo.Core
+import com.malomnogo.ProvideInstance
 import com.malomnogo.presentation.core.CustomViewModel
 import com.malomnogo.presentation.dashboard.DashboardViewModel
 import com.malomnogo.presentation.load.LoadViewModel
@@ -13,6 +14,7 @@ interface ProvideModule {
     fun <T : CustomViewModel> module(clazz: Class<T>): Module<T>
 
     class Base(
+        private val provideInstance: ProvideInstance,
         private val clear: Clear,
         private val core: Core
     ) : ProvideModule {
@@ -21,9 +23,9 @@ interface ProvideModule {
         override fun <T : CustomViewModel> module(clazz: Class<T>): Module<T> {
             return when (clazz) {
                 MainViewModel::class.java -> MainModule(core)
-                LoadViewModel::class.java -> LoadModule(core, clear)
-                DashboardViewModel::class.java -> DashboardModule(core, clear)
-                SettingsViewModel::class.java -> SettingsModule(core, clear)
+                LoadViewModel::class.java -> LoadModule(core, clear, provideInstance)
+                DashboardViewModel::class.java -> DashboardModule(core, clear, provideInstance)
+                SettingsViewModel::class.java -> SettingsModule(core, clear, provideInstance)
                 else -> throw IllegalStateException("unknown viewModel $clazz")
             } as Module<T>
         }

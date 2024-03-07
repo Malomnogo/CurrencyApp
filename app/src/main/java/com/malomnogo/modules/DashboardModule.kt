@@ -1,8 +1,8 @@
 package com.malomnogo.modules
 
 import com.malomnogo.Core
+import com.malomnogo.ProvideInstance
 import com.malomnogo.data.core.HandleError
-import com.malomnogo.data.dashboard.BaseDashboardRepository
 import com.malomnogo.data.dashboard.CurrencyPairRatesDataSource
 import com.malomnogo.data.dashboard.CurrentTimeInMillis
 import com.malomnogo.data.dashboard.UpdatedRateDataSource
@@ -14,7 +14,8 @@ import com.malomnogo.presentation.main.Clear
 
 class DashboardModule(
     private val core: Core,
-    private val clear: Clear
+    private val clear: Clear,
+    private val provideInstance: ProvideInstance
 ) : Module<DashboardViewModel> {
 
     override fun viewModel(): DashboardViewModel {
@@ -25,8 +26,8 @@ class DashboardModule(
         return DashboardViewModel(
             navigation = core.provideNavigation(),
             observable = DashboardUiObservable.Base(),
-            repository = BaseDashboardRepository(
-                cacheDataSource = cacheDataSource,
+            repository = provideInstance.provideDashboardRepository(
+                currencyPairCacheDataSource = cacheDataSource,
                 currencyPairRatesDataSource = CurrencyPairRatesDataSource.Base(
                     currentTimeInMillis = currentTimeInMillis,
                     updatedRateDataSource = UpdatedRateDataSource.Base(

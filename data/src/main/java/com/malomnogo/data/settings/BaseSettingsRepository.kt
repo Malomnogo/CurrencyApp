@@ -2,11 +2,11 @@ package com.malomnogo.data.settings
 
 import com.malomnogo.data.dashboard.cache.CurrencyPairCache
 import com.malomnogo.data.dashboard.cache.CurrencyPairCacheDataSource
-import com.malomnogo.data.load.cache.CurrencyCacheDataSource
+import com.malomnogo.data.load.cache.CurrenciesCacheDataSource
 import com.malomnogo.domain.settings.SettingsRepository
 
 class BaseSettingsRepository(
-    private val allCacheDataSource: CurrencyCacheDataSource.Read,
+    private val allCacheDataSource: CurrenciesCacheDataSource.Read,
     private val favoriteCacheDataSource: CurrencyPairCacheDataSource.Mutable
 ) : SettingsRepository {
 

@@ -1,6 +1,6 @@
 package com.malomnogo.data.load.cache
 
-interface CurrencyCacheDataSource {
+interface CurrenciesCacheDataSource {
 
     interface Save {
 
