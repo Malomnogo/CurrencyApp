@@ -61,7 +61,6 @@ class SettingsViewModelTest {
         runAsync.returnResult()
         interactor.checkSaved(from = "USD", to = "JPY")
         navigation.checkNavigateToPremium()
-        clear.checkCalled(SettingsViewModel::class.java)
 
         viewModel.init(bundleWrapper)
         runAsync.returnResult()

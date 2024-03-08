@@ -19,7 +19,6 @@ class BasePremiumStorageSettingsRepositoryTest {
     fun setup() {
         allCacheDataSource = FakeCurrencyCacheDataSource()
         favoriteCacheDataSource = FakeCurrencyPairCacheDataSource()
-
         repository = BaseSettingsRepository(
             allCacheDataSource = allCacheDataSource,
             favoriteCacheDataSource = favoriteCacheDataSource

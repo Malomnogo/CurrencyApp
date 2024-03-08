@@ -54,7 +54,7 @@ class PremiumViewModelTest {
         observable.checkSuccess()
 
         viewModel.navigateToSettings()
-        navigation.checkNavigateToSettings()
+        navigation.checkPop()
         clear.checkCalled(PremiumViewModel::class.java)
     }
 

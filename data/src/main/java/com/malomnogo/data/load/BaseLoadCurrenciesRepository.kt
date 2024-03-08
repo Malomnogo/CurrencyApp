@@ -14,9 +14,8 @@ class BaseLoadCurrenciesRepository(
 ) : LoadCurrenciesRepository {
 
     override suspend fun fetchCurrencies() = try {
-        if (cacheDataSource.read().isEmpty()) {
+        if (cacheDataSource.read().isEmpty())
             cacheDataSource.save(cloudDataSource.currencies())
-        }
         LoadCurrenciesResult.Success
     } catch (e: Exception) {
         if (e is UnknownHostException)

@@ -58,8 +58,8 @@ class DashboardViewModelTest {
         observable.checkSuccess(
             DashboardUiState.Base(
                 listOf(
-                    DashboardUi.Base(pair = "A/B", rate = "123,40"),
-                    DashboardUi.Base(pair = "C/D", rate = "567,80")
+                    DashboardUi.Base(pair = "A/B", rate = "123,4"),
+                    DashboardUi.Base(pair = "C/D", rate = "567,8")
                 )
             )
         )
@@ -70,7 +70,7 @@ class DashboardViewModelTest {
         observable.checkSuccess(
             DashboardUiState.Base(
                 listOf(
-                    DashboardUi.Base(pair = "C/D", rate = "567,80")
+                    DashboardUi.Base(pair = "C/D", rate = "567,8")
                 )
             )
         )

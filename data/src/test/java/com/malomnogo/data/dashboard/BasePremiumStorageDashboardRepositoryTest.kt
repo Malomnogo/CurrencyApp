@@ -111,11 +111,7 @@ private class FakeCurrencyPairRatesDataSource : CurrencyPairRatesDataSource {
     override suspend fun data(favoriteRates: List<CurrencyPairCache>) =
         if (isSuccess)
             favoriteRates.map {
-                DashboardItem.Base(
-                    it.from,
-                    it.to,
-                    it.rate
-                )
+                DashboardItem.Base(it.from, it.to, it.rate)
             } else
-            throw UnknownHostException()
+              throw UnknownHostException()
 }

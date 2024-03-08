@@ -5,9 +5,7 @@ import com.malomnogo.domain.premium.PremiumStorage
 
 class BasePremiumStorage(private val localStorage: LocalStorage.Mutable) : PremiumStorage.Mutable {
 
-    override fun read(): Boolean {
-        return localStorage.read(KEY, false)
-    }
+    override fun read() = localStorage.read(KEY, false)
 
     override fun save() {
         localStorage.save(KEY, true)

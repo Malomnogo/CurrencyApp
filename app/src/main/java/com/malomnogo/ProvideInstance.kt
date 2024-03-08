@@ -116,7 +116,7 @@ interface ProvideInstance {
             private val favoriteCurrencies = mutableListOf<Pair<String, String>>()
         }
 
-        private class FakeLoadCurrenciesRepository : LoadCurrenciesRepository {
+        private inner class FakeLoadCurrenciesRepository : LoadCurrenciesRepository {
 
             private var counter = 0
 
@@ -128,7 +128,7 @@ interface ProvideInstance {
             }
         }
 
-        private class FakeDashboardRepository : DashboardRepository {
+        private inner class FakeDashboardRepository : DashboardRepository {
 
             override suspend fun dashboardItems(): DashboardResult {
                 return if (favoriteCurrencies.isEmpty())
@@ -150,13 +150,12 @@ interface ProvideInstance {
             }
         }
 
-        private class FakeSettingsRepository : SettingsRepository {
+        private inner class FakeSettingsRepository : SettingsRepository {
 
             override suspend fun currencies(): List<String> = listOf("USD", "EUR", "JPY")
 
             override suspend fun currenciesDestinations(from: String): List<String> {
                 val allCurrencies = currencies().toMutableList().also { it.remove(from) }
-
                 val matched = favoriteCurrencies.filter { it.first == from }.map { it.second }
                 allCurrencies.removeAll(matched)
                 return allCurrencies

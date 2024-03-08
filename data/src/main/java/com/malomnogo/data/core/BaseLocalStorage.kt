@@ -12,6 +12,5 @@ class BaseLocalStorage(context: Context) : LocalStorage.Mutable {
         sharedPreferences.edit().putBoolean(key, value).apply()
     }
 
-    override fun read(key: String, default: Boolean) =
-        sharedPreferences.getBoolean(key, default)
+    override fun read(key: String, default: Boolean) = sharedPreferences.getBoolean(key, default)
 }
