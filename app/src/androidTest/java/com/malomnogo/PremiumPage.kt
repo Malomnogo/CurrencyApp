@@ -64,9 +64,4 @@ class PremiumPage {
             .check(matches(ColorMatcher("#FF0000")))
             .check(matches(isDisplayed()))
     }
-
-    fun checkSuccessMessage() {
-        onView(withText("Success purchased")).inRoot(ToastMatcher())
-            .check(matches(isDisplayed()))
-    }
 }

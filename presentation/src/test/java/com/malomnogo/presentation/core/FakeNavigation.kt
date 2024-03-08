@@ -17,7 +17,6 @@ class FakeNavigation : Navigation {
         assertEquals(LoadScreen, actual)
     }
 
-
     fun checkNavigateToPremium() {
         assertEquals(PremiumScreen, actual)
     }
@@ -28,6 +27,10 @@ class FakeNavigation : Navigation {
 
     fun checkNavigateToSettings() {
         assertEquals(SettingsScreen, actual)
+    }
+
+    fun checkPop() {
+        assertEquals(Screen.Pop, actual)
     }
 
     fun checkNotCalled() {

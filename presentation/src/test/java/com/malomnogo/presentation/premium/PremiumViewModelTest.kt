@@ -51,10 +51,8 @@ class PremiumViewModelTest {
         viewModel.buy()
         observable.checkProgress()
         runAsync.returnResult()
-        observable.checkSuccess()
 
-        viewModel.navigateToSettings()
-        navigation.checkNavigateToSettings()
+        navigation.checkPop()
         clear.checkCalled(PremiumViewModel::class.java)
     }
 
@@ -100,10 +98,6 @@ private class FakeObservable : PremiumObservable {
 
     fun checkProgress() {
         assertEquals(PremiumUiState.Progress, actualUiSate)
-    }
-
-    fun checkSuccess() {
-        assertEquals(PremiumUiState.Success("Success"), actualUiSate)
     }
 
     fun checkError() {

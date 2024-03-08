@@ -13,5 +13,4 @@ interface PremiumStorage {
     }
 
     interface Mutable : Read, Save
-
 }

@@ -2,6 +2,8 @@ package com.malomnogo.presentation.dashboard
 
 import com.malomnogo.domain.dashboard.DashboardItem
 import com.malomnogo.domain.dashboard.DashboardResult
+import java.math.RoundingMode
+import java.text.DecimalFormat
 
 class BaseDashboardResultMapper(
     private val observable: DashboardUiObservable,
@@ -40,8 +42,10 @@ interface RateFormat {
 
     fun format(double: Double): String
 
-    class Base(private val format: String = "%.2f") : RateFormat {
+    class Base(private val decimalFormat: DecimalFormat = DecimalFormat("#.##")) : RateFormat {
 
-        override fun format(double: Double) = String.format(format, double)
+        override fun format(double: Double): String = decimalFormat.apply {
+            roundingMode = RoundingMode.DOWN
+        }.format(double)
     }
 }

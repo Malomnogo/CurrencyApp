@@ -16,7 +16,6 @@ abstract class App : Application(), ProvideViewModel {
             override fun clear(clazz: Class<out CustomViewModel>) {
                 factory.clear(clazz)
             }
-
         }
         factory = ProvideViewModel.Factory(
             BaseProvideViewModel(
@@ -33,7 +32,6 @@ abstract class App : Application(), ProvideViewModel {
 class Release : App() {
 
     override fun provideInstance() = ProvideInstance.Base()
-
 }
 
 class Mock : App() {
