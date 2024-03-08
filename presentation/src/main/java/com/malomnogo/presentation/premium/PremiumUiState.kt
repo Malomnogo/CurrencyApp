@@ -11,7 +11,6 @@ interface PremiumUiState {
         noButton: ChangeVisibility,
         progressBar: ChangeVisibility,
         premiumTextView: CustomTextActions,
-        showSuccess: ShowSuccess
     )
 
     data class Initial(private val description: String) : PremiumUiState {
@@ -20,8 +19,7 @@ interface PremiumUiState {
             buyButton: CustomButtonActions,
             noButton: ChangeVisibility,
             progressBar: ChangeVisibility,
-            premiumTextView: CustomTextActions,
-            showSuccess: ShowSuccess
+            premiumTextView: CustomTextActions
         ) {
             buyButton.show()
             noButton.show()
@@ -37,30 +35,12 @@ interface PremiumUiState {
             buyButton: CustomButtonActions,
             noButton: ChangeVisibility,
             progressBar: ChangeVisibility,
-            premiumTextView: CustomTextActions,
-            showSuccess: ShowSuccess
+            premiumTextView: CustomTextActions
         ) {
             buyButton.hide()
             noButton.hide()
             premiumTextView.hide()
             progressBar.show()
-        }
-    }
-
-    data class Success(private val successDescription: String) : PremiumUiState {
-
-        override fun show(
-            buyButton: CustomButtonActions,
-            noButton: ChangeVisibility,
-            progressBar: ChangeVisibility,
-            premiumTextView: CustomTextActions,
-            showSuccess: ShowSuccess
-        ) {
-            buyButton.hide()
-            noButton.hide()
-            premiumTextView.hide()
-            progressBar.hide()
-            showSuccess.showSuccess(successDescription)
         }
     }
 
@@ -70,8 +50,7 @@ interface PremiumUiState {
             buyButton: CustomButtonActions,
             noButton: ChangeVisibility,
             progressBar: ChangeVisibility,
-            premiumTextView: CustomTextActions,
-            showSuccess: ShowSuccess
+            premiumTextView: CustomTextActions
         ) {
             premiumTextView.show()
             premiumTextView.changeTextColor("#FF0000")
@@ -88,8 +67,7 @@ interface PremiumUiState {
             buyButton: CustomButtonActions,
             noButton: ChangeVisibility,
             progressBar: ChangeVisibility,
-            premiumTextView: CustomTextActions,
-            showSuccess: ShowSuccess
+            premiumTextView: CustomTextActions
         ) = Unit
     }
 }

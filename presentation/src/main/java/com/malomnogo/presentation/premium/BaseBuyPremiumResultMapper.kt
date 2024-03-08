@@ -12,7 +12,6 @@ class BaseBuyPremiumResultMapper(
 ) : BuyPremiumResult.Mapper {
 
     override fun mapSuccess(message: String) {
-        premiumObservable.updateUi(PremiumUiState.Success(message))
         navigation.updateUi(Screen.Pop)
         clear.clear(PremiumViewModel::class.java)
     }

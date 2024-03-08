@@ -16,7 +16,7 @@ class BasePremiumInteractorTest {
     private lateinit var premiumStorage: FakeReadPremiumStorage
 
     @Before
-    fun setUp() {
+    fun setup() {
         repository = FakeSettingsRepository()
         premiumStorage = FakeReadPremiumStorage()
         interactor = PremiumInteractor.Base(
