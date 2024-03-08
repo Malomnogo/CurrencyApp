@@ -75,8 +75,7 @@ class SettingsPage {
                     targetViewId = R.id.currencyTextView,
                     recyclerViewId = toCurrencyRecyclerView
                 )
-            )
-//                .check(matches(withText(currency)))
+            ).check(matches(withText(currency)))
         }
     }
 
@@ -99,11 +98,13 @@ class SettingsPage {
     }
 
     fun checkNoMoreCurrencies() {
-        RecyclerViewMatcher(
-            position = 0,
-            targetViewId = R.id.noMoreTextView,
-            recyclerViewId = toCurrencyRecyclerView
-        ).matches(withText("No more currencies"))
+        onView(
+            RecyclerViewMatcher(
+                position = 0,
+                targetViewId = R.id.noMoreTextView,
+                recyclerViewId = toCurrencyRecyclerView
+            )
+        ).check(matches(withText("No more currencies")))
     }
 
     fun clickSave() {
@@ -126,7 +127,7 @@ class SettingsPage {
                 withParent(isAssignableFrom(ConstraintLayout::class.java))
             )
         )
-//            .check(matches(DrawableMatcher(R.drawable.arrow_back48px)))
+            .check(matches(DrawableMatcher(R.drawable.arrow_back48px)))
             .perform(click())
     }
 }

@@ -25,6 +25,25 @@ interface Screen {
         }
     }
 
+    abstract class Add(clazz: Class<out Fragment>) : Abstract(clazz) {
+
+        override fun show(container: Int, supportFragmentManager: FragmentManager) {
+            if (supportFragmentManager.findFragmentByTag(clazz.name) == null) {
+                supportFragmentManager
+                    .beginTransaction()
+                    .addToBackStack(clazz.simpleName)
+                    .add(container, fragment(), clazz.name)
+                    .commit()
+            }
+        }
+    }
+
+    object Pop : Screen {
+        override fun show(container: Int, supportFragmentManager: FragmentManager) {
+            supportFragmentManager.popBackStack()
+        }
+    }
+
     object Empty : Screen {
 
         override fun show(container: Int, supportFragmentManager: FragmentManager) = Unit

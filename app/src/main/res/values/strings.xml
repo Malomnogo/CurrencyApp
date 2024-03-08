@@ -2,4 +2,7 @@
     <string name="app_name">CurrencyApp</string>
     <string name="no_internet_connection">No internet connection</string>
     <string name="service_unavailable">Service unavailable</string>
+    <string name="success_purchased">Success purchased</string>
+    <string name="fail_purchased">Fail purchased, please try again</string>
+    <string name="buy_premium_description">Buy premium for more than %1$d currencies</string>
 </resources>

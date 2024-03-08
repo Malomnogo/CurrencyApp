@@ -1,7 +1,7 @@
 package com.malomnogo
 
-import com.malomnogo.data.ProvideResources
 import com.malomnogo.data.core.HandleError
+import com.malomnogo.data.core.ProvideResources
 import com.malomnogo.data.dashboard.BaseDashboardRepository
 import com.malomnogo.data.dashboard.CurrencyPairRatesDataSource
 import com.malomnogo.data.dashboard.cache.CurrencyPairCacheDataSource
@@ -14,6 +14,9 @@ import com.malomnogo.domain.dashboard.DashboardRepository
 import com.malomnogo.domain.dashboard.DashboardResult
 import com.malomnogo.domain.load.LoadCurrenciesRepository
 import com.malomnogo.domain.load.LoadCurrenciesResult
+import com.malomnogo.domain.premium.BuyPremiumResult
+import com.malomnogo.domain.premium.PremiumRepository
+import com.malomnogo.domain.premium.PremiumStorage
 import com.malomnogo.domain.settings.SettingsRepository
 
 interface ProvideInstance {
@@ -34,6 +37,14 @@ interface ProvideInstance {
         currenciesCacheDataSource: CurrenciesCacheDataSource.Base,
         currencyPairRatesDataSource: CurrencyPairCacheDataSource.Base
     ): SettingsRepository
+
+    fun providePremiumRepository(
+        maxPairs: Int,
+        premiumStorage: PremiumStorage.Save,
+        provideResources: ProvideResources
+    ): PremiumRepository
+
+    fun provideMaxPairs(): Int
 
     class Base : ProvideInstance {
 
@@ -64,6 +75,14 @@ interface ProvideInstance {
             allCacheDataSource = currenciesCacheDataSource,
             favoriteCacheDataSource = currencyPairRatesDataSource
         )
+
+        override fun providePremiumRepository(
+            maxPairs: Int,
+            premiumStorage: PremiumStorage.Save,
+            provideResources: ProvideResources
+        ): PremiumRepository = FakePremiumRepository(maxPairs, premiumStorage, provideResources)
+
+        override fun provideMaxPairs() = 5
     }
 
     class Mock : ProvideInstance {
@@ -84,6 +103,14 @@ interface ProvideInstance {
             currenciesCacheDataSource: CurrenciesCacheDataSource.Base,
             currencyPairRatesDataSource: CurrencyPairCacheDataSource.Base
         ): SettingsRepository = FakeSettingsRepository()
+
+        override fun providePremiumRepository(
+            maxPairs: Int,
+            premiumStorage: PremiumStorage.Save,
+            provideResources: ProvideResources
+        ): PremiumRepository = FakePremiumRepository(maxPairs, premiumStorage, provideResources)
+
+        override fun provideMaxPairs() = 1
 
         private companion object {
             private val favoriteCurrencies = mutableListOf<Pair<String, String>>()
@@ -138,6 +165,27 @@ interface ProvideInstance {
             override suspend fun save(from: String, to: String) {
                 favoriteCurrencies.add(Pair(from, to))
             }
+
+            override suspend fun savedPairsCount() = favoriteCurrencies.size
         }
     }
+}
+
+private class FakePremiumRepository(
+    private val maxPairs: Int,
+    private val premiumStorage: PremiumStorage.Save,
+    private val provideResources: ProvideResources
+) : PremiumRepository {
+
+    private var failed: Boolean = false
+
+    override suspend fun buy() = if (failed) {
+        premiumStorage.save()
+        BuyPremiumResult.Success(provideResources.successPurchaseMessage())
+    } else {
+        failed = true
+        BuyPremiumResult.Error(provideResources.failPurchaseMessage())
+    }
+
+    override fun description() = provideResources.maxPairsDescription(maxPairs)
 }

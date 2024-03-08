@@ -5,7 +5,6 @@ import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.malomnogo.presentation.main.MainActivity
 import org.junit.Rule
-
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -80,9 +79,27 @@ class ScenarioTest {
 
         settingsPage.chooseTo(position = 0)
         settingsPage.checkChosenTo(position = 0)
-
         settingsPage.clickSave()
-        settingsPage.checkNotVisible()
+
+        val premiumPage = PremiumPage()
+        premiumPage.checkVisible()
+        premiumPage.clickNo()
+
+        settingsPage.checkVisible()
+        settingsPage.checkChosenFrom(position = 0)
+        settingsPage.checkChosenTo(position = 0)
+        settingsPage.clickSave()
+
+        premiumPage.checkVisible()
+        premiumPage.clickBuy()
+        premiumPage.checkError()
+
+        premiumPage.clickBuy()
+
+        settingsPage.checkVisible()
+        settingsPage.checkChosenFrom(position = 0)
+        settingsPage.checkChosenTo(position = 0)
+        settingsPage.clickSave()
 
         dashboardPage.checkVisible()
         dashboardPage.checkPair(position = 0, currencyPair = "USD/EUR", rates = "123.45")
@@ -120,7 +137,21 @@ class ScenarioTest {
         activityScenarioRule.scenario.recreate()
         dashboardPage.checkPair(position = 0, currencyPair = "USD/JPY", rates = "123.45")
 
+        dashboardPage.goToSettings()
+        settingsPage.chooseFrom(0)
+        settingsPage.checkChosenFrom(0)
+        settingsPage.chooseTo(0)
+        settingsPage.checkChosenTo(0)
+        settingsPage.clickSave()
+        settingsPage.checkNotVisible()
+
+        dashboardPage.checkPair(position = 0, currencyPair = "USD/JPY", rates = "123.45")
+        dashboardPage.checkPair(position = 1, currencyPair = "USD/EUR", rates = "123.45")
         dashboardPage.remove(position = 0)
+
+        dashboardPage.checkPair(position = 0, currencyPair = "USD/EUR", rates = "123.45")
+        dashboardPage.remove(position = 0)
+
         dashboardPage.checkEmpty()
         activityScenarioRule.scenario.recreate()
         dashboardPage.checkEmpty()

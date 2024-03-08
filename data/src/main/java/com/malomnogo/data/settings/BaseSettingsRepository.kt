@@ -12,6 +12,8 @@ class BaseSettingsRepository(
 
     override suspend fun currencies() = allCacheDataSource.read().map { it.name }
 
+    override suspend fun savedPairsCount() = favoriteCacheDataSource.read().size
+
     override suspend fun currenciesDestinations(from: String): List<String> {
         val allCurrencies = allCacheDataSource.read().map { it.name }.toMutableList()
         val favorites = favoriteCacheDataSource.read().filter { it.from == from }.map { it.to }
@@ -21,8 +23,6 @@ class BaseSettingsRepository(
     }
 
     override suspend fun save(from: String, to: String) {
-        favoriteCacheDataSource.save(
-            CurrencyPairCache(from = from, to = to)
-        )
+        favoriteCacheDataSource.save(CurrencyPairCache(from = from, to = to))
     }
 }

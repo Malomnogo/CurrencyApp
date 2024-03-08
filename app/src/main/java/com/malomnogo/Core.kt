@@ -2,8 +2,10 @@ package com.malomnogo
 
 import android.content.Context
 import androidx.room.Room
-import com.malomnogo.data.ProvideResources
+import com.malomnogo.data.core.BaseLocalStorage
 import com.malomnogo.data.core.CurrenciesDatabase
+import com.malomnogo.data.core.ProvideResources
+import com.malomnogo.domain.LocalStorage
 import com.malomnogo.presentation.core.RunAsync
 import com.malomnogo.presentation.main.Navigation
 import okhttp3.OkHttpClient
@@ -20,6 +22,8 @@ interface Core {
     fun provideRunAsync(): RunAsync
 
     fun provideDb(): CurrenciesDatabase
+
+    fun provideLocalStorage(): LocalStorage.Mutable
 
     fun provideRetrofit(): Retrofit
 
@@ -51,7 +55,13 @@ interface Core {
                 ).build()
         }
 
+        private val localStorage: LocalStorage.Mutable by lazy {
+            BaseLocalStorage(context = context)
+        }
+
         override fun provideDb() = db
+
+        override fun provideLocalStorage() = localStorage
 
         override fun provideRetrofit(): Retrofit = retrofit
 

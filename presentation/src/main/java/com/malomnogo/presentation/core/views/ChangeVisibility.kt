@@ -5,7 +5,5 @@ interface ChangeVisibility {
     fun show()
 
     fun hide()
-
-    fun invisible()
 }
 

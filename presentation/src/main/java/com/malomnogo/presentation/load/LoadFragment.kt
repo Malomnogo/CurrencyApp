@@ -24,7 +24,7 @@ class LoadFragment : BaseFragment<FragmentLoadBinding, LoadViewModel>() {
             override fun updateUi(uiState: LoadUiState) {
                 uiState.update(
                     progressBar = binding.progress.progressBar,
-                    errorTextView = binding.error.errorTextView,
+                    customTextActionsView = binding.error.errorTextView,
                     retryButton = binding.error.retryButton
                 )
             }

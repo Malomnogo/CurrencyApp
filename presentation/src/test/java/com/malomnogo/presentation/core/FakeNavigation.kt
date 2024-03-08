@@ -4,6 +4,7 @@ import com.malomnogo.presentation.dashboard.DashboardScreen
 import com.malomnogo.presentation.load.LoadScreen
 import com.malomnogo.presentation.main.Navigation
 import com.malomnogo.presentation.main.Screen
+import com.malomnogo.presentation.premium.PremiumScreen
 import com.malomnogo.presentation.settings.SettingsScreen
 import org.junit.Assert.assertEquals
 
@@ -14,6 +15,11 @@ class FakeNavigation : Navigation {
 
     fun checkNavigateToLoad() {
         assertEquals(LoadScreen, actual)
+    }
+
+
+    fun checkNavigateToPremium() {
+        assertEquals(PremiumScreen, actual)
     }
 
     fun checkNavigateToDashboard() {

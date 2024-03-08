@@ -40,8 +40,4 @@ class CustomProgressBar : ProgressBar, ChangeVisibility {
     override fun hide() {
         visibility = GONE
     }
-
-    override fun invisible() {
-        visibility = INVISIBLE
-    }
 }
