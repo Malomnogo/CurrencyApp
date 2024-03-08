@@ -12,7 +12,7 @@ import org.junit.Before
 import org.junit.Test
 import java.net.UnknownHostException
 
-class BaseDashboardRepositoryTest {
+class BasePremiumStorageDashboardRepositoryTest {
 
     private lateinit var repository: BaseDashboardRepository
     private lateinit var cacheDataSource: FakeCacheDataSource

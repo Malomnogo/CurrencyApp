@@ -9,7 +9,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 
-class BaseSettingsRepositoryTest {
+class BasePremiumStorageSettingsRepositoryTest {
 
     private lateinit var allCacheDataSource: FakeCurrencyCacheDataSource
     private lateinit var favoriteCacheDataSource: FakeCurrencyPairCacheDataSource

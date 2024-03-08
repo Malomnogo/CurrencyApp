@@ -1,13 +1,13 @@
 package com.malomnogo.presentation.load
 
 import com.malomnogo.presentation.core.views.ChangeVisibility
-import com.malomnogo.presentation.core.views.ErrorText
+import com.malomnogo.presentation.core.views.CustomTextActions
 
 interface LoadUiState {
 
     fun update(
         progressBar: ChangeVisibility,
-        errorTextView: ErrorText,
+        customTextActionsView: CustomTextActions,
         retryButton: ChangeVisibility
     )
 
@@ -15,11 +15,11 @@ interface LoadUiState {
 
         override fun update(
             progressBar: ChangeVisibility,
-            errorTextView: ErrorText,
+            customTextActionsView: CustomTextActions,
             retryButton: ChangeVisibility
         ) {
-            errorTextView.show()
-            errorTextView.changeText(message)
+            customTextActionsView.show()
+            customTextActionsView.changeText(message)
             progressBar.hide()
             retryButton.show()
         }
@@ -29,10 +29,10 @@ interface LoadUiState {
 
         override fun update(
             progressBar: ChangeVisibility,
-            errorTextView: ErrorText,
+            customTextActionsView: CustomTextActions,
             retryButton: ChangeVisibility
         ) {
-            errorTextView.hide()
+            customTextActionsView.hide()
             progressBar.show()
             retryButton.hide()
         }
@@ -42,7 +42,7 @@ interface LoadUiState {
 
         override fun update(
             progressBar: ChangeVisibility,
-            errorTextView: ErrorText,
+            customTextActionsView: CustomTextActions,
             retryButton: ChangeVisibility
         ) = Unit
     }

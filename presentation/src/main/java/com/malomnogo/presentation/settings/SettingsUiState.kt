@@ -17,7 +17,7 @@ interface SettingsUiState {
             showTo: ShowCurrencies, saveButton: ChangeVisibility
         ) {
             showFrom.show(fromList)
-            saveButton.invisible()
+            saveButton.hide()
         }
     }
 
@@ -33,7 +33,7 @@ interface SettingsUiState {
         ) {
             showFrom.show(fromList)
             showTo.show(toList)
-            saveButton.invisible()
+            saveButton.hide()
         }
     }
 
@@ -58,7 +58,7 @@ interface SettingsUiState {
         ) {
             showFrom.show(fromList)
             showTo.show(listOf(CurrencyChoiceUi.Empty))
-            saveButton.invisible()
+            saveButton.hide()
         }
     }
 

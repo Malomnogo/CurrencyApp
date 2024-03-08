@@ -2,8 +2,10 @@ package com.malomnogo.modules
 
 import com.malomnogo.Core
 import com.malomnogo.ProvideInstance
+import com.malomnogo.data.BasePremiumStorage
 import com.malomnogo.data.dashboard.cache.CurrencyPairCacheDataSource
 import com.malomnogo.data.load.cache.CurrenciesCacheDataSource
+import com.malomnogo.domain.premium.PremiumInteractor
 import com.malomnogo.presentation.main.Clear
 import com.malomnogo.presentation.settings.SettingsUiObservable
 import com.malomnogo.presentation.settings.SettingsViewModel
@@ -15,13 +17,17 @@ class SettingsModule(
 ) : Module<SettingsViewModel> {
 
     override fun viewModel() = SettingsViewModel(
-        repository = provideInstance.provideSettingsRepository(
-            currenciesCacheDataSource = CurrenciesCacheDataSource.Base(
-                core.provideDb().currenciesDao()
+        interactor = PremiumInteractor.Base(
+            repository = provideInstance.provideSettingsRepository(
+                currenciesCacheDataSource = CurrenciesCacheDataSource.Base(
+                    core.provideDb().currenciesDao()
+                ),
+                currencyPairRatesDataSource = CurrencyPairCacheDataSource.Base(
+                    core.provideDb().latestCurrencyDao()
+                )
             ),
-            currencyPairRatesDataSource = CurrencyPairCacheDataSource.Base(
-                core.provideDb().latestCurrencyDao()
-            )
+            premiumStorage = BasePremiumStorage(core.provideLocalStorage()),
+            maxPairs = provideInstance.provideMaxPairs()
         ),
         navigation = core.provideNavigation(),
         observable = SettingsUiObservable.Base(),

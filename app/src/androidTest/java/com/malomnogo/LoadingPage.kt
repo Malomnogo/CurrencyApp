@@ -10,7 +10,7 @@ import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.malomnogo.presentation.core.views.CustomButton
-import com.malomnogo.presentation.core.views.ErrorTextView
+import com.malomnogo.presentation.core.views.CustomTextView
 import org.hamcrest.CoreMatchers.allOf
 import ru.easycode.presentation.R
 
@@ -19,7 +19,7 @@ class LoadingPage {
     fun checkVisible() {
         onView(
             allOf(
-                withId(R.id.rootLayout),
+                withId(R.id.loadRootLayout),
                 isAssignableFrom(FrameLayout::class.java)
             )
         ).check(matches(isDisplayed()))
@@ -30,7 +30,7 @@ class LoadingPage {
             allOf(
                 withId(R.id.errorTextView),
                 withText(message),
-                isAssignableFrom(ErrorTextView::class.java),
+                isAssignableFrom(CustomTextView::class.java),
             )
         ).check(matches(isDisplayed()))
         onView(
@@ -53,7 +53,7 @@ class LoadingPage {
     fun checkNotVisible() {
         onView(
             allOf(
-                withId(R.id.rootLayout),
+                withId(R.id.loadRootLayout),
                 isAssignableFrom(FrameLayout::class.java)
             )
         ).check(doesNotExist())

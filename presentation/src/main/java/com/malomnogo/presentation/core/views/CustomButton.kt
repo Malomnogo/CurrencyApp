@@ -5,7 +5,7 @@ import android.os.Parcelable
 import android.util.AttributeSet
 import com.google.android.material.button.MaterialButton
 
-class CustomButton : MaterialButton, ChangeVisibility {
+class CustomButton : MaterialButton, CustomButtonActions {
 
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
@@ -14,6 +14,10 @@ class CustomButton : MaterialButton, ChangeVisibility {
         attrs,
         defStyleAttr
     )
+
+    init {
+        freezesText = true
+    }
 
     override fun onSaveInstanceState(): Parcelable {
         super.onSaveInstanceState().let {
@@ -37,7 +41,9 @@ class CustomButton : MaterialButton, ChangeVisibility {
         visibility = GONE
     }
 
-    override fun invisible() {
-        visibility = INVISIBLE
+    override fun changeText(text: String) {
+        this.text = text
     }
 }
+
+interface CustomButtonActions : ChangeVisibility, ChangeText

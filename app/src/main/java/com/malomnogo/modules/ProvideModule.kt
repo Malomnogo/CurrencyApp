@@ -7,6 +7,7 @@ import com.malomnogo.presentation.dashboard.DashboardViewModel
 import com.malomnogo.presentation.load.LoadViewModel
 import com.malomnogo.presentation.main.Clear
 import com.malomnogo.presentation.main.MainViewModel
+import com.malomnogo.presentation.premium.PremiumViewModel
 import com.malomnogo.presentation.settings.SettingsViewModel
 
 interface ProvideModule {
@@ -26,6 +27,7 @@ interface ProvideModule {
                 LoadViewModel::class.java -> LoadModule(core, clear, provideInstance)
                 DashboardViewModel::class.java -> DashboardModule(core, clear, provideInstance)
                 SettingsViewModel::class.java -> SettingsModule(core, clear, provideInstance)
+                PremiumViewModel::class.java -> PremiumModule(core, clear, provideInstance)
                 else -> throw IllegalStateException("unknown viewModel $clazz")
             } as Module<T>
         }

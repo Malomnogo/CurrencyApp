@@ -1,6 +1,6 @@
 package com.malomnogo.data.load
 
-import com.malomnogo.data.ProvideResources
+import com.malomnogo.data.core.ProvideResources
 import com.malomnogo.data.load.cache.CurrenciesCacheDataSource
 import com.malomnogo.data.load.cloud.LoadCurrenciesCloudDataSource
 import com.malomnogo.domain.load.LoadCurrenciesRepository

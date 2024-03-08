@@ -1,6 +1,7 @@
 package com.malomnogo.presentation.settings
 
-import com.malomnogo.domain.settings.SettingsRepository
+import com.malomnogo.domain.premium.PremiumInteractor
+import com.malomnogo.domain.premium.SaveResult
 import com.malomnogo.presentation.core.BaseViewModel
 import com.malomnogo.presentation.core.RunAsync
 import com.malomnogo.presentation.core.UpdateUi
@@ -9,18 +10,19 @@ import com.malomnogo.presentation.main.Clear
 import com.malomnogo.presentation.main.Navigation
 
 class SettingsViewModel(
-    private val repository: SettingsRepository,
+    private val interactor: PremiumInteractor,
     private val navigation: Navigation,
     private val observable: SettingsUiObservable,
     private val clear: Clear,
     runAsync: RunAsync,
-    private val chooseMapper: ChooseMapper = ChooseMapper.Base()
+    private val chooseMapper: ChooseMapper = ChooseMapper.Base(),
+    private val saveMapper: SaveResult.Mapper = BaseSaveResultMapper(navigation, clear)
 ) : BaseViewModel(runAsync) {
 
     fun init(bundleWrapper: BundleWrapper.Mutable) {
         if (bundleWrapper.isEmpty())
             runAsync({
-                repository.currencies()
+                interactor.currencies()
             }) {
                 observable.updateUi(
                     SettingsUiState.Initial(it.map { currency -> CurrencyChoiceUi.Base(currency) })
@@ -36,7 +38,7 @@ class SettingsViewModel(
 
     fun choose(from: String) {
         runAsync({
-            chooseMapper.map(from, repository.currencies(), repository.currenciesDestinations(from))
+            chooseMapper.map(from, interactor.currencies(), interactor.currenciesDestinations(from))
         }) {
             observable.updateUi(it)
         }
@@ -45,7 +47,7 @@ class SettingsViewModel(
     fun chooseDestination(from: String, to: String) {
         runAsync({
             SettingsUiState.ReadyToSave(
-                toList = repository.currenciesDestinations(from).map {
+                toList = interactor.currenciesDestinations(from).map {
                     CurrencyChoiceUi.Base(it, it == to)
                 }
             )
@@ -56,9 +58,9 @@ class SettingsViewModel(
 
     fun save(from: String, to: String) {
         runAsync({
-            repository.save(from, to)
+            interactor.save(from, to)
         }) {
-            navigateToDashboard()
+            it.map(saveMapper)
         }
     }
 

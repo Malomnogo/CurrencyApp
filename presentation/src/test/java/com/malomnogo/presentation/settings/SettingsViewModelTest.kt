@@ -1,6 +1,7 @@
 package com.malomnogo.presentation.settings
 
-import com.malomnogo.domain.settings.SettingsRepository
+import com.malomnogo.domain.premium.PremiumInteractor
+import com.malomnogo.domain.premium.SaveResult
 import com.malomnogo.presentation.core.FakeClear
 import com.malomnogo.presentation.core.FakeNavigation
 import com.malomnogo.presentation.core.FakeRunAsync
@@ -15,7 +16,7 @@ class SettingsViewModelTest {
     private lateinit var viewModel: SettingsViewModel
     private lateinit var navigation: FakeNavigation
     private lateinit var observable: FakeSettingsUiObservable
-    private lateinit var repository: FakeSettingsRepository
+    private lateinit var interactor: FakePremiumInteractor
     private lateinit var runAsync: FakeRunAsync
     private lateinit var clear: FakeClear
     private lateinit var bundleWrapper: FakeBundleWrapper
@@ -24,14 +25,14 @@ class SettingsViewModelTest {
     fun setup() {
         navigation = FakeNavigation()
         observable = FakeSettingsUiObservable()
-        repository = FakeSettingsRepository()
+        interactor = FakePremiumInteractor()
         runAsync = FakeRunAsync()
         clear = FakeClear()
         bundleWrapper = FakeBundleWrapper()
         viewModel = SettingsViewModel(
             navigation = navigation,
             observable = observable,
-            repository = repository,
+            interactor = interactor,
             runAsync = runAsync,
             clear = clear
         )
@@ -58,8 +59,8 @@ class SettingsViewModelTest {
 
         viewModel.save(from = "USD", to = "JPY")
         runAsync.returnResult()
-        repository.checkSaved(from = "USD", to = "JPY")
-        navigation.checkNavigateToDashboard()
+        interactor.checkSaved(from = "USD", to = "JPY")
+        navigation.checkNavigateToPremium()
         clear.checkCalled(SettingsViewModel::class.java)
 
         viewModel.init(bundleWrapper)
@@ -76,9 +77,10 @@ class SettingsViewModelTest {
             toList = listOf(CurrencyChoiceUi.Base("EUR", true))
         )
 
+        interactor.premium()
         viewModel.save(from = "USD", to = "EUR")
         runAsync.returnResult()
-        repository.checkSaved(from = "USD", to = "EUR")
+        interactor.checkSaved(from = "USD", to = "EUR")
         navigation.checkNavigateToDashboard()
         clear.checkCalled(SettingsViewModel::class.java)
 
@@ -174,19 +176,28 @@ private class FakeSettingsUiObservable : SettingsUiObservable {
     }
 }
 
-private class FakeSettingsRepository : SettingsRepository {
+private class FakePremiumInteractor : PremiumInteractor {
 
     private var actualPair = ""
     private var actualDestinations = mutableListOf("USD", "JPY", "EUR")
+    private var isPremium = false
+
+    fun premium() {
+        isPremium = true
+    }
 
     override suspend fun currencies() = mutableListOf("USD", "JPY", "EUR")
 
     override suspend fun currenciesDestinations(from: String) =
         actualDestinations.apply { remove(from) }
 
-    override suspend fun save(from: String, to: String) {
+    override suspend fun save(from: String, to: String): SaveResult {
         actualPair = "$from/$to"
         actualDestinations.remove(to)
+        return if (isPremium)
+            SaveResult.Success
+        else
+            SaveResult.NeedPremium
     }
 
     fun checkSaved(from: String, to: String) {

@@ -1,6 +1,5 @@
 package com.malomnogo.data.core
 
-import com.malomnogo.data.ProvideResources
 import java.net.UnknownHostException
 
 interface HandleError {
