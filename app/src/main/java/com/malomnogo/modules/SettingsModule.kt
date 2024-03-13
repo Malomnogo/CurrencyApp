@@ -1,37 +1,57 @@
 package com.malomnogo.modules
 
-import com.malomnogo.Core
 import com.malomnogo.ProvideInstance
-import com.malomnogo.data.BasePremiumStorage
 import com.malomnogo.data.dashboard.cache.CurrencyPairCacheDataSource
 import com.malomnogo.data.load.cache.CurrenciesCacheDataSource
-import com.malomnogo.domain.premium.PremiumInteractor
-import com.malomnogo.presentation.main.Clear
+import com.malomnogo.domain.premium.SaveResult
+import com.malomnogo.domain.settings.SettingsRepository
+import com.malomnogo.presentation.settings.BaseSaveResultMapper
+import com.malomnogo.presentation.settings.ChooseMapper
 import com.malomnogo.presentation.settings.SettingsUiObservable
-import com.malomnogo.presentation.settings.SettingsViewModel
+import dagger.Binds
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 
-class SettingsModule(
-    private val core: Core,
-    private val clear: Clear,
-    private val provideInstance: ProvideInstance
-) : Module<SettingsViewModel> {
+@Module
+@InstallIn(SingletonComponent::class)
+abstract class SettingsModule {
 
-    override fun viewModel() = SettingsViewModel(
-        interactor = PremiumInteractor.Base(
-            repository = provideInstance.provideSettingsRepository(
-                currenciesCacheDataSource = CurrenciesCacheDataSource.Base(
-                    core.provideDb().currenciesDao()
-                ),
-                currencyPairRatesDataSource = CurrencyPairCacheDataSource.Base(
-                    core.provideDb().latestCurrencyDao()
-                )
-            ),
-            premiumStorage = BasePremiumStorage(core.provideLocalStorage()),
-            maxPairs = provideInstance.provideMaxPairs()
-        ),
-        navigation = core.provideNavigation(),
-        observable = SettingsUiObservable.Base(),
-        clear = clear,
-        runAsync = core.provideRunAsync()
-    )
+    @Binds
+    abstract fun bindObservable(
+        observable: SettingsUiObservable.Base
+    ): SettingsUiObservable
+
+    @Binds
+    abstract fun bindAllCacheDataSource(
+        allCacheDataSource: CurrenciesCacheDataSource.Base
+    ): CurrenciesCacheDataSource.Read
+
+    @Binds
+    abstract fun bindFavoriteCacheDataSource(
+        favoriteCacheDataSource: CurrencyPairCacheDataSource.Base
+    ): CurrencyPairCacheDataSource.Mutable
+
+    @Binds
+    abstract fun bindSaveMapper(
+        mapper: BaseSaveResultMapper
+    ): SaveResult.Mapper
+
+    @Binds
+    abstract fun bindChooseMapper(
+        mapper: ChooseMapper.Base
+    ): ChooseMapper
+
+    companion object {
+        @Provides
+        fun provideRepository(
+            provideInstance: ProvideInstance,
+            currenciesCacheDataSource: CurrenciesCacheDataSource.Base,
+            favoriteCurrenciesCacheDataSource: CurrencyPairCacheDataSource.Base
+        ): SettingsRepository = provideInstance.provideSettingsRepository(
+            currenciesCacheDataSource,
+            favoriteCurrenciesCacheDataSource
+        )
+    }
 }

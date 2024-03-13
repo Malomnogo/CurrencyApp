@@ -1,6 +1,7 @@
 package com.malomnogo.domain.premium
 
 import com.malomnogo.domain.settings.SettingsRepository
+import javax.inject.Inject
 
 interface PremiumInteractor {
 
@@ -10,7 +11,7 @@ interface PremiumInteractor {
 
     suspend fun save(from: String, to: String): SaveResult
 
-    class Base(
+    class Base @Inject constructor(
         private val repository: SettingsRepository,
         private val premiumStorage: PremiumStorage.Read,
         private val maxPairs: Int

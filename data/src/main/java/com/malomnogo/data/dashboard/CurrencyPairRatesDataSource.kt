@@ -7,12 +7,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
 interface CurrencyPairRatesDataSource {
 
     suspend fun data(favoriteRates: List<CurrencyPairCache>): List<DashboardItem>
 
-    class Base(
+    class Base @Inject constructor(
         private val currentTimeInMillis: CurrentTimeInMillis,
         private val updatedRateDataSource: UpdatedRateDataSource,
         private val dispatcher: CoroutineDispatcher = Dispatchers.IO

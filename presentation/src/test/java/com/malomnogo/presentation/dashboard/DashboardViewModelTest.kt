@@ -3,7 +3,6 @@ package com.malomnogo.presentation.dashboard
 import com.malomnogo.domain.dashboard.DashboardItem
 import com.malomnogo.domain.dashboard.DashboardRepository
 import com.malomnogo.domain.dashboard.DashboardResult
-import com.malomnogo.presentation.core.FakeClear
 import com.malomnogo.presentation.core.FakeNavigation
 import com.malomnogo.presentation.core.FakeRunAsync
 import com.malomnogo.presentation.core.UpdateUi
@@ -19,7 +18,6 @@ class DashboardViewModelTest {
     private lateinit var observable: FakeDashboardUiObservable
     private lateinit var repository: FakeDashboardRepository
     private lateinit var runAsync: FakeRunAsync
-    private lateinit var clear: FakeClear
 
     @Before
     fun setup() {
@@ -27,13 +25,19 @@ class DashboardViewModelTest {
         observable = FakeDashboardUiObservable()
         repository = FakeDashboardRepository()
         runAsync = FakeRunAsync()
-        clear = FakeClear()
         viewModel = DashboardViewModel(
             navigation = navigation,
             observable = observable,
             repository = repository,
-            clear = clear,
-            runAsync = runAsync
+            runAsync = runAsync,
+            delimiter = Delimiter.Base(),
+            mapper = BaseDashboardResultMapper(
+                observable = observable,
+                dashboardItemMapper = BaseDashboardItemMapper(
+                    delimiter = Delimiter.Base(),
+                    rateFormat = RateFormat.Base()
+                )
+            )
         )
     }
 
@@ -82,7 +86,6 @@ class DashboardViewModelTest {
 
         viewModel.goToSettings()
         navigation.checkNavigateToSettings()
-        clear.checkCalled(DashboardViewModel::class.java)
     }
 
 

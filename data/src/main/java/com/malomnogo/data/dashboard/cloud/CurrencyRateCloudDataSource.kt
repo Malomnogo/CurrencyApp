@@ -1,12 +1,15 @@
 package com.malomnogo.data.dashboard.cloud
 
 import retrofit2.Retrofit
+import javax.inject.Inject
 
 interface CurrencyRateCloudDataSource {
 
     fun latestCurrency(from: String, to: String): Double
 
-    class Base(private val currencyRateService: CurrencyRateService) : CurrencyRateCloudDataSource {
+    class Base @Inject constructor(
+        private val currencyRateService: CurrencyRateService
+    ) : CurrencyRateCloudDataSource {
 
         constructor(retrofit: Retrofit) : this(retrofit.create(CurrencyRateService::class.java))
 

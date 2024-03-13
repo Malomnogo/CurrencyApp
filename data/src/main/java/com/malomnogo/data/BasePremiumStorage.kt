@@ -2,8 +2,11 @@ package com.malomnogo.data
 
 import com.malomnogo.domain.LocalStorage
 import com.malomnogo.domain.premium.PremiumStorage
+import javax.inject.Inject
 
-class BasePremiumStorage(private val localStorage: LocalStorage.Mutable) : PremiumStorage.Mutable {
+class BasePremiumStorage @Inject constructor(
+    private val localStorage: LocalStorage.Mutable
+) : PremiumStorage.Mutable {
 
     override fun read() = localStorage.read(KEY, false)
 

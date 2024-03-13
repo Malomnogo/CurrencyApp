@@ -1,9 +1,13 @@
-package com.malomnogo.data.core
+package com.malomnogo
 
 import android.content.Context
 import com.malomnogo.domain.LocalStorage
+import dagger.hilt.android.qualifiers.ApplicationContext
+import javax.inject.Inject
 
-class BaseLocalStorage(context: Context) : LocalStorage.Mutable {
+class BaseLocalStorage @Inject constructor(
+    @ApplicationContext context: Context
+) : LocalStorage.Mutable {
 
     private val sharedPreferences =
         context.getSharedPreferences("premiumStorage", Context.MODE_PRIVATE)

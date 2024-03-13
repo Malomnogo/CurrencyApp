@@ -4,8 +4,9 @@ import com.malomnogo.data.core.HandleError
 import com.malomnogo.data.dashboard.cache.CurrencyPairCacheDataSource
 import com.malomnogo.domain.dashboard.DashboardRepository
 import com.malomnogo.domain.dashboard.DashboardResult
+import javax.inject.Inject
 
-class BaseDashboardRepository(
+class BaseDashboardRepository @Inject constructor(
     private val cacheDataSource: CurrencyPairCacheDataSource.Mutable,
     private val currencyPairRatesDataSource: CurrencyPairRatesDataSource,
     private val handleError: HandleError

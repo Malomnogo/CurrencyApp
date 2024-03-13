@@ -1,12 +1,14 @@
 package com.malomnogo.presentation.core
 
+import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-abstract class BaseViewModel(private val runAsync: RunAsync) : CustomViewModel {
+abstract class BaseViewModel(private val runAsync: RunAsync) : ViewModel() {
 
     private val viewModelScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
 
@@ -26,7 +28,7 @@ interface RunAsync {
         uiBlock: (T) -> Unit
     )
 
-    class Base : RunAsync {
+    class Base @Inject constructor() : RunAsync {
 
         override fun <T : Any> start(
             coroutineScope: CoroutineScope,

@@ -5,20 +5,15 @@ import com.malomnogo.domain.load.LoadCurrenciesResult
 import com.malomnogo.presentation.core.BaseViewModel
 import com.malomnogo.presentation.core.RunAsync
 import com.malomnogo.presentation.core.UpdateUi
-import com.malomnogo.presentation.main.Clear
-import com.malomnogo.presentation.main.Navigation
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class LoadViewModel(
+@HiltViewModel
+class LoadViewModel @Inject constructor(
     private val repository: LoadCurrenciesRepository,
     private val uiObservable: LoadUiObservable,
-    private val navigation: Navigation,
-    private val clear: Clear,
     runAsync: RunAsync,
-    private val mapper: LoadCurrenciesResult.Mapper = BaseLoadResultMapper(
-        uiObservable,
-        navigation,
-        clear
-    )
+    private val mapper: LoadCurrenciesResult.Mapper
 ) : BaseViewModel(runAsync) {
 
     fun init(isFirstRun: Boolean) {

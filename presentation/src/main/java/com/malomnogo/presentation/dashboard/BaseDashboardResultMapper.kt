@@ -4,34 +4,28 @@ import com.malomnogo.domain.dashboard.DashboardItem
 import com.malomnogo.domain.dashboard.DashboardResult
 import java.math.RoundingMode
 import java.text.DecimalFormat
+import javax.inject.Inject
 
-class BaseDashboardResultMapper(
-    private val observable: DashboardUiObservable,
-    private val dashboardItemMapper: DashboardItem.Mapper<DashboardUi> = BaseDashboardItemMapper()
-) : DashboardResult.Mapper {
+class BaseDashboardResultMapper @Inject constructor(
+    private val dashboardItemMapper: DashboardItem.Mapper<DashboardUi>
+) : DashboardResult.Mapper<DashboardUiState> {
 
-    override fun mapSuccess(dashboardItems: List<DashboardItem>) {
-        observable.updateUi(
-            DashboardUiState.Base(
-                dashboardItems.map {
-                    it.map(dashboardItemMapper)
-                }
-            )
+    override fun mapSuccess(dashboardItems: List<DashboardItem>) =
+        DashboardUiState.Base(
+            dashboardItems.map {
+                it.map(dashboardItemMapper)
+            }
         )
-    }
 
-    override fun mapError(message: String) {
-        observable.updateUi(DashboardUiState.Error(message))
-    }
+    override fun mapError(message: String) = DashboardUiState.Error(message)
 
-    override fun mapEmpty() {
-        observable.updateUi(DashboardUiState.Empty)
-    }
+
+    override fun mapEmpty() = DashboardUiState.Empty
 }
 
-class BaseDashboardItemMapper(
-    private val rateFormat: RateFormat = RateFormat.Base(),
-    private val delimiter: Delimiter.Create = Delimiter.Base()
+class BaseDashboardItemMapper @Inject constructor(
+    private val rateFormat: RateFormat,
+    private val delimiter: Delimiter.Create
 ) : DashboardItem.Mapper<DashboardUi> {
 
     override fun map(fromCurrency: String, toCurrency: String, rates: Double) =

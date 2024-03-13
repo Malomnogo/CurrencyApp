@@ -2,7 +2,6 @@ package com.malomnogo.presentation.settings
 
 import com.malomnogo.domain.premium.PremiumInteractor
 import com.malomnogo.domain.premium.SaveResult
-import com.malomnogo.presentation.core.FakeClear
 import com.malomnogo.presentation.core.FakeNavigation
 import com.malomnogo.presentation.core.FakeRunAsync
 import com.malomnogo.presentation.core.UpdateUi
@@ -18,7 +17,6 @@ class SettingsViewModelTest {
     private lateinit var observable: FakeSettingsUiObservable
     private lateinit var interactor: FakePremiumInteractor
     private lateinit var runAsync: FakeRunAsync
-    private lateinit var clear: FakeClear
     private lateinit var bundleWrapper: FakeBundleWrapper
 
     @Before
@@ -27,14 +25,12 @@ class SettingsViewModelTest {
         observable = FakeSettingsUiObservable()
         interactor = FakePremiumInteractor()
         runAsync = FakeRunAsync()
-        clear = FakeClear()
         bundleWrapper = FakeBundleWrapper()
         viewModel = SettingsViewModel(
             navigation = navigation,
             observable = observable,
             interactor = interactor,
-            runAsync = runAsync,
-            clear = clear
+            runAsync = runAsync
         )
     }
 
@@ -81,7 +77,6 @@ class SettingsViewModelTest {
         runAsync.returnResult()
         interactor.checkSaved(from = "USD", to = "EUR")
         navigation.checkNavigateToDashboard()
-        clear.checkCalled(SettingsViewModel::class.java)
 
         viewModel.init(bundleWrapper)
         runAsync.returnResult()
@@ -93,7 +88,6 @@ class SettingsViewModelTest {
 
         viewModel.navigateToDashboard()
         navigation.checkNavigateToDashboard()
-        clear.checkCalled(SettingsViewModel::class.java)
     }
 
     @Test

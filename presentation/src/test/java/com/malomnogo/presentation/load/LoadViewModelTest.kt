@@ -2,7 +2,6 @@ package com.malomnogo.presentation.load
 
 import com.malomnogo.domain.load.LoadCurrenciesRepository
 import com.malomnogo.domain.load.LoadCurrenciesResult
-import com.malomnogo.presentation.core.FakeClear
 import com.malomnogo.presentation.core.FakeNavigation
 import com.malomnogo.presentation.core.FakeRunAsync
 import com.malomnogo.presentation.core.UpdateUi
@@ -18,7 +17,6 @@ class LoadViewModelTest {
     private lateinit var repository: FakeRepository
     private lateinit var runAsync: FakeRunAsync
     private lateinit var navigation: FakeNavigation
-    private lateinit var clear: FakeClear
 
     @Before
     fun setup() {
@@ -26,13 +24,11 @@ class LoadViewModelTest {
         runAsync = FakeRunAsync()
         navigation = FakeNavigation()
         repository = FakeRepository()
-        clear = FakeClear()
         viewModel = LoadViewModel(
             repository = repository,
             uiObservable = uiObservable,
-            navigation = navigation,
-            clear = clear,
-            runAsync = runAsync
+            runAsync = runAsync,
+            mapper = BaseLoadResultMapper(uiObservable, navigation)
         )
     }
 
@@ -43,7 +39,6 @@ class LoadViewModelTest {
         uiObservable.checkProgress()
         runAsync.returnResult()
         navigation.checkNavigateToDashboard()
-        clear.checkCalled(LoadViewModel::class.java)
     }
 
     @Test
@@ -59,7 +54,6 @@ class LoadViewModelTest {
         uiObservable.checkProgress()
         runAsync.returnResult()
         navigation.checkNavigateToDashboard()
-        clear.checkCalled(LoadViewModel::class.java)
     }
 
     @Test

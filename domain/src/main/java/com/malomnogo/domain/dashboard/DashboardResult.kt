@@ -2,35 +2,29 @@ package com.malomnogo.domain.dashboard
 
 interface DashboardResult {
 
-    fun map(mapper: Mapper)
+    fun <T : Any> map(mapper: Mapper<T>): T
 
-    interface Mapper {
+    interface Mapper<T : Any> {
 
-        fun mapSuccess(dashboardItems: List<DashboardItem>)
+        fun mapSuccess(dashboardItems: List<DashboardItem>): T
 
-        fun mapError(message: String)
+        fun mapError(message: String): T
 
-        fun mapEmpty()
+        fun mapEmpty(): T
     }
 
     data class Success(private val dashboardItems: List<DashboardItem>) : DashboardResult {
 
-        override fun map(mapper: Mapper) {
-            mapper.mapSuccess(dashboardItems)
-        }
+        override fun <T : Any> map(mapper: Mapper<T>) = mapper.mapSuccess(dashboardItems)
     }
 
     data class Error(private val message: String) : DashboardResult {
 
-        override fun map(mapper: Mapper) {
-            mapper.mapError(message)
-        }
+        override fun <T : Any> map(mapper: Mapper<T>): T = mapper.mapError(message)
     }
 
     object Empty : DashboardResult {
 
-        override fun map(mapper: Mapper) {
-            mapper.mapEmpty()
-        }
+        override fun <T : Any> map(mapper: Mapper<T>) = mapper.mapEmpty()
     }
 }

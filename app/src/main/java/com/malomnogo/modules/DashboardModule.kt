@@ -1,6 +1,5 @@
 package com.malomnogo.modules
 
-import com.malomnogo.Core
 import com.malomnogo.ProvideInstance
 import com.malomnogo.data.core.HandleError
 import com.malomnogo.data.dashboard.CurrencyPairRatesDataSource
@@ -8,40 +7,98 @@ import com.malomnogo.data.dashboard.CurrentTimeInMillis
 import com.malomnogo.data.dashboard.UpdatedRateDataSource
 import com.malomnogo.data.dashboard.cache.CurrencyPairCacheDataSource
 import com.malomnogo.data.dashboard.cloud.CurrencyRateCloudDataSource
+import com.malomnogo.domain.dashboard.DashboardItem
+import com.malomnogo.domain.dashboard.DashboardRepository
+import com.malomnogo.domain.dashboard.DashboardResult
+import com.malomnogo.presentation.dashboard.BaseDashboardItemMapper
+import com.malomnogo.presentation.dashboard.BaseDashboardResultMapper
+import com.malomnogo.presentation.dashboard.DashboardUi
 import com.malomnogo.presentation.dashboard.DashboardUiObservable
-import com.malomnogo.presentation.dashboard.DashboardViewModel
-import com.malomnogo.presentation.main.Clear
+import com.malomnogo.presentation.dashboard.DashboardUiState
+import com.malomnogo.presentation.dashboard.Delimiter
+import com.malomnogo.presentation.dashboard.RateFormat
+import dagger.Binds
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ViewModelComponent
+import dagger.hilt.android.scopes.ViewModelScoped
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 
-class DashboardModule(
-    private val core: Core,
-    private val clear: Clear,
-    private val provideInstance: ProvideInstance
-) : Module<DashboardViewModel> {
+@Module
+@InstallIn(ViewModelComponent::class)
+abstract class DashboardModule {
 
-    override fun viewModel(): DashboardViewModel {
-        val cacheDataSource =
-            CurrencyPairCacheDataSource.Base(core.provideDb().latestCurrencyDao())
-        val currentTimeInMillis = CurrentTimeInMillis.Base()
+    @Binds
+    @ViewModelScoped
+    abstract fun bindObservable(
+        dashboardObservable: DashboardUiObservable.Base
+    ): DashboardUiObservable
 
-        return DashboardViewModel(
-            navigation = core.provideNavigation(),
-            observable = DashboardUiObservable.Base(),
-            repository = provideInstance.provideDashboardRepository(
-                currencyPairCacheDataSource = cacheDataSource,
-                currencyPairRatesDataSource = CurrencyPairRatesDataSource.Base(
-                    currentTimeInMillis = currentTimeInMillis,
-                    updatedRateDataSource = UpdatedRateDataSource.Base(
-                        currentTimeInMillis = currentTimeInMillis,
-                        cloudDataSource = CurrencyRateCloudDataSource.Base(
-                            retrofit = core.provideRetrofit()
-                        ),
-                        cacheDataSource = cacheDataSource
-                    )
-                ),
-                handleError = HandleError.Base(core.provideResources())
-            ),
-            clear = clear,
-            runAsync = core.provideRunAsync()
+    @Binds
+    abstract fun bindCacheDataSource(
+        cacheDataSource: CurrencyPairCacheDataSource.Base
+    ): CurrencyPairCacheDataSource.Save
+
+    @Binds
+    abstract fun bindCurrencyPairRatesDataSource(
+        pairRatesDataSource: CurrencyPairRatesDataSource.Base
+    ): CurrencyPairRatesDataSource
+
+    @Binds
+    abstract fun bindUpdatedRateDataSource(
+        updatedRateDataSource: UpdatedRateDataSource.Base
+    ): UpdatedRateDataSource
+
+    @Binds
+    abstract fun bindCloudDataSource(
+        currenciesCloudDataSource: CurrencyRateCloudDataSource.Base
+    ): CurrencyRateCloudDataSource
+
+    @Binds
+    abstract fun bindCreateDelimiter(
+        delimiter: Delimiter.Base
+    ): Delimiter.Create
+
+    @Binds
+    abstract fun bindRemoveDelimiter(
+        delimiter: Delimiter.Base
+    ): Delimiter.Split
+
+    @Binds
+    abstract fun bindMapper(
+        mapper: BaseDashboardResultMapper
+    ): DashboardResult.Mapper<DashboardUiState>
+
+    @Binds
+    abstract fun bindDashboardItemMapper(
+        mapper: BaseDashboardItemMapper
+    ): DashboardItem.Mapper<DashboardUi>
+
+    companion object {
+        @Provides
+        fun provideDelimiter(): Delimiter.Base = Delimiter.Base()
+
+        @Provides
+        fun provideDispatcherIO(): CoroutineDispatcher = Dispatchers.IO
+
+        @Provides
+        fun provideCurrentTimeInMillis(): CurrentTimeInMillis = CurrentTimeInMillis.Base()
+
+        @Provides
+        fun provideRatesFormatter(): RateFormat = RateFormat.Base()
+
+        @Provides
+        fun provideRepository(
+            provideInstance: ProvideInstance,
+            cacheDataSource: CurrencyPairCacheDataSource.Base,
+            currencyPairRatesDataSource: CurrencyPairRatesDataSource.Base,
+            handleError: HandleError.Base
+        ): DashboardRepository = provideInstance.provideDashboardRepository(
+            currencyPairCacheDataSource = cacheDataSource,
+            currencyPairRatesDataSource = currencyPairRatesDataSource,
+            handleError = handleError
         )
     }
 }

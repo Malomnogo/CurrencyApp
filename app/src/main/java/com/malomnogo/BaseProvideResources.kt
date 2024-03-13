@@ -3,8 +3,12 @@ package com.malomnogo
 import android.content.Context
 import com.malomnogo.currencyapp.R
 import com.malomnogo.data.core.ProvideResources
+import dagger.hilt.android.qualifiers.ApplicationContext
+import javax.inject.Inject
 
-class BaseProvideResources(private val context: Context) : ProvideResources {
+class BaseProvideResources @Inject constructor(
+    @ApplicationContext private val context: Context
+) : ProvideResources {
 
     override fun noInternetConnectionMessage() =
         context.resources.getString(R.string.no_internet_connection)
