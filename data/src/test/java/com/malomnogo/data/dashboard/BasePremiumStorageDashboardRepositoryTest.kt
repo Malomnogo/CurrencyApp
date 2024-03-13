@@ -2,6 +2,9 @@ package com.malomnogo.data.dashboard
 
 import com.malomnogo.data.core.FakeHandleError
 import com.malomnogo.data.core.FakeProvideResources
+import com.malomnogo.data.currencies.cache.CurrenciesCacheDataSource
+import com.malomnogo.data.currencies.cache.CurrencyCache
+import com.malomnogo.data.currencies.cloud.LoadCurrenciesCloudDataSource
 import com.malomnogo.data.dashboard.cache.CurrencyPairCache
 import com.malomnogo.data.dashboard.cache.CurrencyPairCacheDataSource
 import com.malomnogo.domain.dashboard.DashboardItem
@@ -12,25 +15,53 @@ import org.junit.Before
 import org.junit.Test
 import java.net.UnknownHostException
 
-class BasePremiumStorageDashboardRepositoryTest {
+class BaseDashboardRepositoryTest {
 
     private lateinit var repository: BaseDashboardRepository
     private lateinit var cacheDataSource: FakeCacheDataSource
     private lateinit var currencyPairRatesDataSource: FakeCurrencyPairRatesDataSource
+    private lateinit var currencyCacheDataSource: FakeCurrencyCacheDataSource
+    private lateinit var loadCurrenciesCloudDataSource: FakeLoadCurrenciesCloudDataSource
 
     @Before
     fun setup() {
         cacheDataSource = FakeCacheDataSource()
         currencyPairRatesDataSource = FakeCurrencyPairRatesDataSource()
+        currencyCacheDataSource = FakeCurrencyCacheDataSource()
+        loadCurrenciesCloudDataSource = FakeLoadCurrenciesCloudDataSource()
         repository = BaseDashboardRepository(
             cacheDataSource = cacheDataSource,
             currencyPairRatesDataSource = currencyPairRatesDataSource,
+            allCurrenciesCacheDataSource = currencyCacheDataSource,
+            cloudDataSource = loadCurrenciesCloudDataSource,
             handleError = FakeHandleError(FakeProvideResources())
         )
     }
 
     @Test
+    fun successCurrencies() =
+        runBlocking {
+            val expected = hashMapOf(
+                "USD" to "United States Dollar",
+                "AUD" to "Australian Dollar",
+                "JPY" to "Japanese Yen"
+            )
+
+            loadCurrenciesCloudDataSource.successResult()
+            currencyCacheDataSource.noHaveCache()
+            repository.dashboardItems()
+            currencyCacheDataSource.checkCurrencies(expected)
+
+            loadCurrenciesCloudDataSource.expectException(UnknownHostException())
+            currencyCacheDataSource.haveCache()
+            repository.dashboardItems()
+            currencyCacheDataSource.checkCurrencies(expected)
+        }
+
+
+    @Test
     fun testEmpty() = runBlocking {
+        loadCurrenciesCloudDataSource.successResult()
         cacheDataSource.empty()
         val expected = repository.dashboardItems()
         assertEquals(expected, DashboardResult.Empty)
@@ -38,6 +69,7 @@ class BasePremiumStorageDashboardRepositoryTest {
 
     @Test
     fun testSuccess() = runBlocking {
+        loadCurrenciesCloudDataSource.successResult()
         cacheDataSource.notEmpty()
         currencyPairRatesDataSource.success()
         val expected = repository.dashboardItems()
@@ -53,6 +85,7 @@ class BasePremiumStorageDashboardRepositoryTest {
 
     @Test
     fun testError() = runBlocking {
+        loadCurrenciesCloudDataSource.expectException(UnknownHostException())
         cacheDataSource.notEmpty()
         currencyPairRatesDataSource.error()
         val expected = repository.dashboardItems()
@@ -61,6 +94,7 @@ class BasePremiumStorageDashboardRepositoryTest {
 
     @Test
     fun testRemove() = runBlocking {
+        loadCurrenciesCloudDataSource.successResult()
         cacheDataSource.notEmpty()
         val expected = repository.removePair("A", "B")
         assertEquals(
@@ -113,5 +147,61 @@ private class FakeCurrencyPairRatesDataSource : CurrencyPairRatesDataSource {
             favoriteRates.map {
                 DashboardItem.Base(it.from, it.to, it.rate)
             } else
-              throw UnknownHostException()
+            throw UnknownHostException()
+}
+
+private class FakeCurrencyCacheDataSource : CurrenciesCacheDataSource.Mutable {
+
+    private val actualCurrencies = mutableMapOf<String, String>()
+    private var haveCache = false
+
+    fun checkCurrencies(expected: Map<String, String>) {
+        assertEquals(expected, actualCurrencies)
+    }
+
+    fun haveCache() {
+        haveCache = true
+    }
+
+    fun noHaveCache() {
+        haveCache = false
+    }
+
+    override suspend fun save(currencies: HashMap<String, String>) {
+        this.actualCurrencies.putAll(currencies)
+    }
+
+    override suspend fun read() = if (haveCache)
+        listOf(
+            CurrencyCache("USD", "United States Dollar"),
+            CurrencyCache("AUD", "Australian Dollar"),
+            CurrencyCache("JPY", "Japanese Yen")
+        ) else
+        emptyList()
+}
+
+private class FakeLoadCurrenciesCloudDataSource : LoadCurrenciesCloudDataSource {
+
+    private var isSuccessResult: Boolean = false
+
+    private lateinit var exception: Exception
+
+    fun successResult() {
+        isSuccessResult = true
+    }
+
+    fun expectException(exception: Exception) {
+        this.exception = exception
+    }
+
+    override suspend fun currencies(): HashMap<String, String> {
+        if (isSuccessResult)
+            return hashMapOf(
+                "USD" to "United States Dollar",
+                "AUD" to "Australian Dollar",
+                "JPY" to "Japanese Yen"
+            )
+        else
+            throw exception
+    }
 }

@@ -1,8 +1,8 @@
 package com.malomnogo.modules
 
 import com.malomnogo.ProvideInstance
+import com.malomnogo.data.currencies.cache.CurrenciesCacheDataSource
 import com.malomnogo.data.dashboard.cache.CurrencyPairCacheDataSource
-import com.malomnogo.data.load.cache.CurrenciesCacheDataSource
 import com.malomnogo.domain.premium.SaveResult
 import com.malomnogo.domain.settings.SettingsRepository
 import com.malomnogo.presentation.settings.BaseSaveResultMapper

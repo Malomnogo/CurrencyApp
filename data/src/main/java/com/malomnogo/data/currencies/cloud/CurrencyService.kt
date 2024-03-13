@@ -1,4 +1,4 @@
-package com.malomnogo.data.load.cloud
+package com.malomnogo.data.currencies.cloud
 
 import retrofit2.Call
 import retrofit2.http.GET

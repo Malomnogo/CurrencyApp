@@ -1,4 +1,4 @@
-package com.malomnogo.data.load.cache
+package com.malomnogo.data.currencies.cache
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
