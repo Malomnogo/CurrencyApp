@@ -2,7 +2,7 @@ package com.malomnogo.presentation.main
 
 import androidx.lifecycle.ViewModel
 import com.malomnogo.presentation.core.UpdateUi
-import com.malomnogo.presentation.load.LoadScreen
+import com.malomnogo.presentation.dashboard.DashboardScreen
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -13,7 +13,7 @@ class MainViewModel @Inject constructor(
 
     fun init(isFirstRun: Boolean) {
         if (isFirstRun)
-            navigation.updateUi(LoadScreen)
+            navigation.updateUi(DashboardScreen)
     }
 
     fun startGettingUpdates(navigation: UpdateUi<Screen>) {

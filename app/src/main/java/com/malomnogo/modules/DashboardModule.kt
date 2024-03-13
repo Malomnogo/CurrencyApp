@@ -2,6 +2,8 @@ package com.malomnogo.modules
 
 import com.malomnogo.ProvideInstance
 import com.malomnogo.data.core.HandleError
+import com.malomnogo.data.currencies.cache.CurrenciesCacheDataSource
+import com.malomnogo.data.currencies.cloud.LoadCurrenciesCloudDataSource
 import com.malomnogo.data.dashboard.CurrencyPairRatesDataSource
 import com.malomnogo.data.dashboard.CurrentTimeInMillis
 import com.malomnogo.data.dashboard.UpdatedRateDataSource
@@ -37,7 +39,22 @@ abstract class DashboardModule {
     ): DashboardUiObservable
 
     @Binds
-    abstract fun bindCacheDataSource(
+    abstract fun bindLoadCurrenciesCloudDataSource(
+        cloudDataSource: LoadCurrenciesCloudDataSource.Base
+    ): LoadCurrenciesCloudDataSource
+
+    @Binds
+    abstract fun bindCurrencyRateCloudDataSource(
+        currenciesCloudDataSource: CurrencyRateCloudDataSource.Base
+    ): CurrencyRateCloudDataSource
+
+    @Binds
+    abstract fun bindCurrenciesCacheDataSource(
+        cacheDataSource: CurrenciesCacheDataSource.Base
+    ): CurrenciesCacheDataSource.Mutable
+
+    @Binds
+    abstract fun bindCurrencyPairCacheDataSource(
         cacheDataSource: CurrencyPairCacheDataSource.Base
     ): CurrencyPairCacheDataSource.Save
 
@@ -51,10 +68,7 @@ abstract class DashboardModule {
         updatedRateDataSource: UpdatedRateDataSource.Base
     ): UpdatedRateDataSource
 
-    @Binds
-    abstract fun bindCloudDataSource(
-        currenciesCloudDataSource: CurrencyRateCloudDataSource.Base
-    ): CurrencyRateCloudDataSource
+
 
     @Binds
     abstract fun bindCreateDelimiter(
@@ -94,10 +108,14 @@ abstract class DashboardModule {
             provideInstance: ProvideInstance,
             cacheDataSource: CurrencyPairCacheDataSource.Base,
             currencyPairRatesDataSource: CurrencyPairRatesDataSource.Base,
+            cloudDataSource: LoadCurrenciesCloudDataSource,
+            allCurrenciesCacheDataSource: CurrenciesCacheDataSource.Mutable,
             handleError: HandleError.Base
         ): DashboardRepository = provideInstance.provideDashboardRepository(
             currencyPairCacheDataSource = cacheDataSource,
             currencyPairRatesDataSource = currencyPairRatesDataSource,
+            cloudDataSource = cloudDataSource,
+            cacheDataSource = allCurrenciesCacheDataSource,
             handleError = handleError
         )
     }

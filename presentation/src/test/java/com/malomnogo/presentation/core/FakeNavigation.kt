@@ -1,7 +1,6 @@
 package com.malomnogo.presentation.core
 
 import com.malomnogo.presentation.dashboard.DashboardScreen
-import com.malomnogo.presentation.load.LoadScreen
 import com.malomnogo.presentation.main.Navigation
 import com.malomnogo.presentation.main.Screen
 import com.malomnogo.presentation.premium.PremiumScreen
@@ -12,10 +11,6 @@ class FakeNavigation : Navigation {
 
     private var actual: Screen = Screen.Empty
     private var observer: UpdateUi<Screen> = UpdateUi.Empty()
-
-    fun checkNavigateToLoad() {
-        assertEquals(LoadScreen, actual)
-    }
 
     fun checkNavigateToPremium() {
         assertEquals(PremiumScreen, actual)

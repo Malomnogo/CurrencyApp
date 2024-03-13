@@ -1,9 +1,9 @@
 package com.malomnogo.data.settings
 
+import com.malomnogo.data.currencies.cache.CurrenciesCacheDataSource
+import com.malomnogo.data.currencies.cache.CurrencyCache
 import com.malomnogo.data.dashboard.cache.CurrencyPairCache
 import com.malomnogo.data.dashboard.cache.CurrencyPairCacheDataSource
-import com.malomnogo.data.load.cache.CurrenciesCacheDataSource
-import com.malomnogo.data.load.cache.CurrencyCache
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Before

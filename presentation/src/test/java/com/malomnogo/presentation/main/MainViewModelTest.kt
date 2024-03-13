@@ -18,7 +18,7 @@ class MainViewModelTest {
     @Test
     fun firstRun() {
         viewModel.init(isFirstRun = true)
-        navigation.checkNavigateToLoad()
+        navigation.checkNavigateToDashboard()
     }
 
     @Test

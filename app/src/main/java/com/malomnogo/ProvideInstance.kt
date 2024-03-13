@@ -2,18 +2,15 @@ package com.malomnogo
 
 import com.malomnogo.data.core.HandleError
 import com.malomnogo.data.core.ProvideResources
+import com.malomnogo.data.currencies.cache.CurrenciesCacheDataSource
+import com.malomnogo.data.currencies.cloud.LoadCurrenciesCloudDataSource
 import com.malomnogo.data.dashboard.BaseDashboardRepository
 import com.malomnogo.data.dashboard.CurrencyPairRatesDataSource
 import com.malomnogo.data.dashboard.cache.CurrencyPairCacheDataSource
-import com.malomnogo.data.load.BaseLoadCurrenciesRepository
-import com.malomnogo.data.load.cache.CurrenciesCacheDataSource
-import com.malomnogo.data.load.cloud.LoadCurrenciesCloudDataSource
 import com.malomnogo.data.settings.BaseSettingsRepository
 import com.malomnogo.domain.dashboard.DashboardItem
 import com.malomnogo.domain.dashboard.DashboardRepository
 import com.malomnogo.domain.dashboard.DashboardResult
-import com.malomnogo.domain.load.LoadCurrenciesRepository
-import com.malomnogo.domain.load.LoadCurrenciesResult
 import com.malomnogo.domain.premium.BuyPremiumResult
 import com.malomnogo.domain.premium.PremiumRepository
 import com.malomnogo.domain.premium.PremiumStorage
@@ -22,15 +19,11 @@ import javax.inject.Inject
 
 interface ProvideInstance {
 
-    fun provideLoadCurrenciesRepository(
-        cloudDataSource: LoadCurrenciesCloudDataSource,
-        cacheDataSource: CurrenciesCacheDataSource.Mutable,
-        handleError: HandleError.Base
-    ): LoadCurrenciesRepository
-
     fun provideDashboardRepository(
         currencyPairCacheDataSource: CurrencyPairCacheDataSource.Base,
         currencyPairRatesDataSource: CurrencyPairRatesDataSource.Base,
+        cloudDataSource: LoadCurrenciesCloudDataSource,
+        cacheDataSource: CurrenciesCacheDataSource.Mutable,
         handleError: HandleError.Base
     ): DashboardRepository
 
@@ -49,23 +42,17 @@ interface ProvideInstance {
 
     class Base @Inject constructor() : ProvideInstance {
 
-        override fun provideLoadCurrenciesRepository(
-            cloudDataSource: LoadCurrenciesCloudDataSource,
-            cacheDataSource: CurrenciesCacheDataSource.Mutable,
-            handleError: HandleError.Base
-        ) = BaseLoadCurrenciesRepository(
-            cacheDataSource = cacheDataSource,
-            cloudDataSource = cloudDataSource,
-            handleError = handleError
-        )
-
         override fun provideDashboardRepository(
             currencyPairCacheDataSource: CurrencyPairCacheDataSource.Base,
             currencyPairRatesDataSource: CurrencyPairRatesDataSource.Base,
+            cloudDataSource: LoadCurrenciesCloudDataSource,
+            cacheDataSource: CurrenciesCacheDataSource.Mutable,
             handleError: HandleError.Base
         ) = BaseDashboardRepository(
             cacheDataSource = currencyPairCacheDataSource,
             currencyPairRatesDataSource = currencyPairRatesDataSource,
+            allCurrenciesCacheDataSource = cacheDataSource,
+            cloudDataSource = cloudDataSource,
             handleError = handleError
         )
 
@@ -88,15 +75,11 @@ interface ProvideInstance {
 
     class Mock @Inject constructor() : ProvideInstance {
 
-        override fun provideLoadCurrenciesRepository(
-            cloudDataSource: LoadCurrenciesCloudDataSource,
-            cacheDataSource: CurrenciesCacheDataSource.Mutable,
-            handleError: HandleError.Base
-        ): LoadCurrenciesRepository = FakeLoadCurrenciesRepository()
-
         override fun provideDashboardRepository(
             currencyPairCacheDataSource: CurrencyPairCacheDataSource.Base,
             currencyPairRatesDataSource: CurrencyPairRatesDataSource.Base,
+            cloudDataSource: LoadCurrenciesCloudDataSource,
+            cacheDataSource: CurrenciesCacheDataSource.Mutable,
             handleError: HandleError.Base
         ): DashboardRepository = FakeDashboardRepository()
 
@@ -115,34 +98,21 @@ interface ProvideInstance {
 
         private companion object {
             private val favoriteCurrencies = mutableListOf<Pair<String, String>>()
-        }
-
-        private inner class FakeLoadCurrenciesRepository : LoadCurrenciesRepository {
-
-            private var counter = 0
-
-            override suspend fun fetchCurrencies(): LoadCurrenciesResult {
-                return if (counter++ == 0)
-                    LoadCurrenciesResult.Error("No internet connection")
-                else
-                    LoadCurrenciesResult.Success
-            }
+            private var error = true
         }
 
         private inner class FakeDashboardRepository : DashboardRepository {
 
-            override suspend fun dashboardItems(): DashboardResult {
-                return if (favoriteCurrencies.isEmpty())
-                    DashboardResult.Empty
-                else
-                    DashboardResult.Success(
-                        favoriteCurrencies.map {
-                            DashboardItem.Base(
-                                from = it.first,
-                                to = it.second,
-                                rates = 123.45
-                            )
-                        })
+            override suspend fun dashboardItems() = when {
+                error -> {
+                    error = false
+                    DashboardResult.Error("No internet connection")
+                }
+                favoriteCurrencies.isEmpty() -> DashboardResult.Empty
+                else -> DashboardResult.Success(
+                    favoriteCurrencies.map {
+                        DashboardItem.Base(from = it.first, to = it.second, rates = 123.45)
+                    })
             }
 
             override suspend fun removePair(from: String, to: String): DashboardResult {

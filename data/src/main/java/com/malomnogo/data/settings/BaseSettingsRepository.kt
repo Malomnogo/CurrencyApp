@@ -1,8 +1,8 @@
 package com.malomnogo.data.settings
 
+import com.malomnogo.data.currencies.cache.CurrenciesCacheDataSource
 import com.malomnogo.data.dashboard.cache.CurrencyPairCache
 import com.malomnogo.data.dashboard.cache.CurrencyPairCacheDataSource
-import com.malomnogo.data.load.cache.CurrenciesCacheDataSource
 import com.malomnogo.domain.settings.SettingsRepository
 import javax.inject.Inject
 

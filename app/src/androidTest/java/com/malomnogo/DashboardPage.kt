@@ -11,6 +11,8 @@ import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withParent
 import androidx.test.espresso.matcher.ViewMatchers.withText
+import com.malomnogo.presentation.core.views.CustomButton
+import com.malomnogo.presentation.core.views.CustomTextView
 import org.hamcrest.CoreMatchers.allOf
 import ru.easycode.presentation.R
 
@@ -63,5 +65,30 @@ class DashboardPage {
         )
             .check(matches(DrawableMatcher(R.drawable.settings_48px)))
             .perform(click())
+    }
+
+    fun checkError(message: String) {
+        onView(
+            allOf(
+                withId(R.id.errorTextView),
+                withText(message),
+                isAssignableFrom(CustomTextView::class.java),
+            )
+        ).check(matches(isDisplayed()))
+        onView(
+            allOf(
+                withId(R.id.retryButton),
+                isAssignableFrom(CustomButton::class.java)
+            )
+        ).check(matches(isDisplayed()))
+    }
+
+    fun clickRetry() {
+        onView(
+            allOf(
+                withId(R.id.retryButton),
+                isAssignableFrom(CustomButton::class.java)
+            )
+        ).perform(click())
     }
 }

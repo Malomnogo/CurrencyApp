@@ -32,7 +32,6 @@ class DashboardViewModelTest {
             runAsync = runAsync,
             delimiter = Delimiter.Base(),
             mapper = BaseDashboardResultMapper(
-                observable = observable,
                 dashboardItemMapper = BaseDashboardItemMapper(
                     delimiter = Delimiter.Base(),
                     rateFormat = RateFormat.Base()

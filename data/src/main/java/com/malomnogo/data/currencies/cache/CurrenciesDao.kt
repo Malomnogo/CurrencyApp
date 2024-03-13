@@ -1,4 +1,4 @@
-package com.malomnogo.data.load.cache
+package com.malomnogo.data.currencies.cache
 
 import androidx.room.Dao
 import androidx.room.Insert

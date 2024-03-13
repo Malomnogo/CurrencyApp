@@ -1,7 +1,7 @@
 package com.malomnogo.modules
 
+import com.malomnogo.data.currencies.cloud.CurrencyService
 import com.malomnogo.data.dashboard.cloud.CurrencyRateService
-import com.malomnogo.data.load.cloud.CurrencyService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
