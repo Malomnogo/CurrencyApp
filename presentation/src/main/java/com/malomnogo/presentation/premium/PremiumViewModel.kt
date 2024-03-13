@@ -5,18 +5,19 @@ import com.malomnogo.domain.premium.PremiumRepository
 import com.malomnogo.presentation.core.BaseViewModel
 import com.malomnogo.presentation.core.RunAsync
 import com.malomnogo.presentation.core.UpdateUi
-import com.malomnogo.presentation.main.Clear
 import com.malomnogo.presentation.main.Navigation
 import com.malomnogo.presentation.main.Screen
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class PremiumViewModel(
+@HiltViewModel
+class PremiumViewModel @Inject constructor(
     private val repository: PremiumRepository,
     private val observable: PremiumObservable,
     private val navigation: Navigation,
-    private val clear: Clear,
     runAsync: RunAsync,
     private val mapper: BuyPremiumResult.Mapper =
-        BaseBuyPremiumResultMapper(observable, navigation, clear)
+        BaseBuyPremiumResultMapper(observable, navigation)
 ) : BaseViewModel(runAsync) {
 
     fun init(isFirstRun: Boolean) {
@@ -35,7 +36,6 @@ class PremiumViewModel(
 
     fun navigateToSettings() {
         navigation.updateUi(Screen.Pop)
-        clear.clear(PremiumViewModel::class.java)
     }
 
     fun startGettingUpdates(observer: UpdateUi<PremiumUiState>) {

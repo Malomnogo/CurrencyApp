@@ -1,25 +1,24 @@
 package com.malomnogo.presentation.main
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.malomnogo.presentation.core.CustomViewModel
-import com.malomnogo.presentation.core.ProvideViewModel
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import com.malomnogo.presentation.core.UpdateUi
+import dagger.hilt.android.AndroidEntryPoint
 import ru.easycode.presentation.R
 import ru.easycode.presentation.databinding.ActivityMainBinding
 
-class MainActivity : AppCompatActivity(), ProvideViewModel {
+@AndroidEntryPoint
+class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var navigationObserver: UpdateUi<Screen>
-    private lateinit var viewModel: MainViewModel
+    private val viewModel: MainViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        viewModel = viewModel(MainViewModel::class.java)
 
         navigationObserver = object : UpdateUi<Screen> {
             override fun updateUi(uiState: Screen) {
@@ -38,7 +37,4 @@ class MainActivity : AppCompatActivity(), ProvideViewModel {
         super.onPause()
         viewModel.stopGettingUpdates()
     }
-
-    override fun <T : CustomViewModel> viewModel(clazz: Class<T>) =
-        (application as ProvideViewModel).viewModel(clazz)
 }

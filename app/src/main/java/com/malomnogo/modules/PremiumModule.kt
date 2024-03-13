@@ -1,28 +1,67 @@
 package com.malomnogo.modules
 
-import com.malomnogo.Core
 import com.malomnogo.ProvideInstance
 import com.malomnogo.data.BasePremiumStorage
-import com.malomnogo.presentation.main.Clear
+import com.malomnogo.data.core.ProvideResources
+import com.malomnogo.domain.premium.BuyPremiumResult
+import com.malomnogo.domain.premium.PremiumInteractor
+import com.malomnogo.domain.premium.PremiumStorage
+import com.malomnogo.domain.settings.SettingsRepository
+import com.malomnogo.presentation.premium.BaseBuyPremiumResultMapper
 import com.malomnogo.presentation.premium.PremiumObservable
-import com.malomnogo.presentation.premium.PremiumViewModel
+import dagger.Binds
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ViewModelComponent
+import dagger.hilt.android.scopes.ViewModelScoped
 
-class PremiumModule(
-    private val core: Core,
-    private val clear: Clear,
-    private val provideInstance: ProvideInstance
-) : Module<PremiumViewModel> {
+@Module
+@InstallIn(ViewModelComponent::class)
+abstract class PremiumModule {
 
-    override fun viewModel() = PremiumViewModel(
-        repository =
-        provideInstance.providePremiumRepository(
+    @Binds
+    @ViewModelScoped
+    abstract fun bindObservable(
+        premiumObservable: PremiumObservable.Base
+    ): PremiumObservable
+
+    @Binds
+    abstract fun bindSavePremiumStorage(
+        premiumStorage: BasePremiumStorage
+    ): PremiumStorage.Save
+
+    @Binds
+    abstract fun bindPremiumInteractor(
+        premiumInteractor: PremiumInteractor.Base
+    ): PremiumInteractor
+
+    @Binds
+    abstract fun bindPremiumResultMapper(
+        premiumResultMapper: BaseBuyPremiumResultMapper
+    ): BuyPremiumResult.Mapper
+
+    companion object {
+        @Provides
+        fun provideRepository(
+            provideInstance: ProvideInstance,
+            premiumStorage: BasePremiumStorage,
+            provideResources: ProvideResources
+        ) = provideInstance.providePremiumRepository(
             maxPairs = provideInstance.provideMaxPairs(),
-            premiumStorage = BasePremiumStorage(core.provideLocalStorage()),
-            provideResources = core.provideResources(),
-        ),
-        observable = PremiumObservable.Base(),
-        navigation = core.provideNavigation(),
-        clear = clear,
-        runAsync = core.provideRunAsync()
-    )
+            premiumStorage = premiumStorage,
+            provideResources = provideResources
+        )
+
+        @Provides
+        fun provideInteractor(
+            provideInstance: ProvideInstance,
+            repository: SettingsRepository,
+            premiumStorage: BasePremiumStorage
+        ) = PremiumInteractor.Base(
+            repository = repository,
+            premiumStorage = premiumStorage,
+            maxPairs = provideInstance.provideMaxPairs()
+        )
+    }
 }

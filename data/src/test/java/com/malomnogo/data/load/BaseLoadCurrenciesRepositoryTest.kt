@@ -1,5 +1,6 @@
 package com.malomnogo.data.load
 
+import com.malomnogo.data.core.FakeHandleError
 import com.malomnogo.data.core.FakeProvideResources
 import com.malomnogo.data.load.cache.CurrenciesCacheDataSource
 import com.malomnogo.data.load.cache.CurrencyCache
@@ -16,17 +17,15 @@ class BaseLoadCurrenciesRepositoryTest {
     private lateinit var repository: BaseLoadCurrenciesRepository
     private lateinit var cacheDataSource: FakeCurrencyCacheDataSource
     private lateinit var cloudDataSource: FakeLoadCurrenciesCloudDataSource
-    private lateinit var provideResources: FakeProvideResources
 
     @Before
     fun setup() {
         cacheDataSource = FakeCurrencyCacheDataSource()
         cloudDataSource = FakeLoadCurrenciesCloudDataSource()
-        provideResources = FakeProvideResources()
         repository = BaseLoadCurrenciesRepository(
             cacheDataSource = cacheDataSource,
             cloudDataSource = cloudDataSource,
-            provideResources = provideResources
+            handleError = FakeHandleError(FakeProvideResources())
         )
     }
 

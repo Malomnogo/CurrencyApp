@@ -1,5 +1,7 @@
 package com.malomnogo.data.dashboard.cache
 
+import javax.inject.Inject
+
 interface CurrencyPairCacheDataSource {
 
     interface Save {
@@ -20,7 +22,7 @@ interface CurrencyPairCacheDataSource {
 
     interface Mutable : Mutate, Read
 
-    class Base(private val currencyPairDao: CurrencyPairDao) : Mutable {
+    class Base @Inject constructor(private val currencyPairDao: CurrencyPairDao) : Mutable {
 
         override suspend fun save(currency: CurrencyPairCache) {
             currencyPairDao.insert(currency)

@@ -6,17 +6,18 @@ import com.malomnogo.presentation.core.BaseViewModel
 import com.malomnogo.presentation.core.RunAsync
 import com.malomnogo.presentation.core.UpdateUi
 import com.malomnogo.presentation.dashboard.DashboardScreen
-import com.malomnogo.presentation.main.Clear
 import com.malomnogo.presentation.main.Navigation
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class SettingsViewModel(
+@HiltViewModel
+class SettingsViewModel @Inject constructor(
     private val interactor: PremiumInteractor,
     private val navigation: Navigation,
     private val observable: SettingsUiObservable,
-    private val clear: Clear,
     runAsync: RunAsync,
     private val chooseMapper: ChooseMapper = ChooseMapper.Base(),
-    private val saveMapper: SaveResult.Mapper = BaseSaveResultMapper(navigation, clear)
+    private val saveMapper: SaveResult.Mapper = BaseSaveResultMapper(navigation)
 ) : BaseViewModel(runAsync) {
 
     fun init(bundleWrapper: BundleWrapper.Mutable) {
@@ -66,7 +67,6 @@ class SettingsViewModel(
 
     fun navigateToDashboard() {
         navigation.updateUi(DashboardScreen)
-        clear.clear(this::class.java)
     }
 
     fun startGettingUpdates(observer: UpdateUi<SettingsUiState>) {
@@ -82,7 +82,7 @@ interface ChooseMapper {
 
     fun map(from: String, fromList: List<String>, toList: List<String>): SettingsUiState
 
-    class Base : ChooseMapper {
+    class Base @Inject constructor() : ChooseMapper {
 
         override fun map(
             from: String,

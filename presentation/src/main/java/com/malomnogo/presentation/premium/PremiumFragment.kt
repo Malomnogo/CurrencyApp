@@ -4,14 +4,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
 import com.malomnogo.presentation.core.BaseFragment
 import com.malomnogo.presentation.core.UpdateUi
+import dagger.hilt.android.AndroidEntryPoint
 import ru.easycode.presentation.databinding.FragmentPremiumBinding
 
+@AndroidEntryPoint
 class PremiumFragment : BaseFragment<FragmentPremiumBinding, PremiumViewModel>() {
 
-    override val viewModelClass = PremiumViewModel::class.java
     private lateinit var updateUi: UpdateUi<PremiumUiState>
+    override val viewModel: PremiumViewModel by viewModels()
 
     override fun inflate(inflater: LayoutInflater, container: ViewGroup?) =
         FragmentPremiumBinding.inflate(inflater, container, false)

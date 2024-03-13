@@ -5,14 +5,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
+import androidx.fragment.app.viewModels
 import com.malomnogo.presentation.core.BaseFragment
 import com.malomnogo.presentation.core.UpdateUi
+import dagger.hilt.android.AndroidEntryPoint
 import ru.easycode.presentation.databinding.FragmentSettingsBinding
 
+@AndroidEntryPoint
 class SettingsFragment : BaseFragment<FragmentSettingsBinding, SettingsViewModel>() {
 
+    override val viewModel: SettingsViewModel by viewModels()
     private lateinit var updateUi: UpdateUi<SettingsUiState>
-    override val viewModelClass = SettingsViewModel::class.java
     private lateinit var fromAdapter: SettingsAdapter
     private lateinit var toAdapter: SettingsAdapter
 

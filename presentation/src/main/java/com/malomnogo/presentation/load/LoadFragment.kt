@@ -4,18 +4,20 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
 import com.malomnogo.presentation.core.BaseFragment
 import com.malomnogo.presentation.core.UpdateUi
+import dagger.hilt.android.AndroidEntryPoint
 import ru.easycode.presentation.databinding.FragmentLoadBinding
 
+@AndroidEntryPoint
 class LoadFragment : BaseFragment<FragmentLoadBinding, LoadViewModel>() {
 
     private lateinit var updateUi: UpdateUi<LoadUiState>
 
+    override val viewModel: LoadViewModel by viewModels()
     override fun inflate(inflater: LayoutInflater, container: ViewGroup?) =
         FragmentLoadBinding.inflate(inflater, container, false)
-
-    override val viewModelClass = LoadViewModel::class.java
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

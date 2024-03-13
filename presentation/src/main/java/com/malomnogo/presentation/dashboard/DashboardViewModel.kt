@@ -5,18 +5,19 @@ import com.malomnogo.domain.dashboard.DashboardResult
 import com.malomnogo.presentation.core.BaseViewModel
 import com.malomnogo.presentation.core.RunAsync
 import com.malomnogo.presentation.core.UpdateUi
-import com.malomnogo.presentation.main.Clear
 import com.malomnogo.presentation.main.Navigation
 import com.malomnogo.presentation.settings.SettingsScreen
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class DashboardViewModel(
+@HiltViewModel
+class DashboardViewModel @Inject constructor(
     private val navigation: Navigation,
     private val observable: DashboardUiObservable,
     private val repository: DashboardRepository,
-    private val clear: Clear,
     runAsync: RunAsync,
-    private val mapper: DashboardResult.Mapper = BaseDashboardResultMapper(observable),
-    private val delimiter: Delimiter.Split = Delimiter.Base()
+    private val mapper: DashboardResult.Mapper<DashboardUiState>,
+    private val delimiter: Delimiter.Split
 ) : BaseViewModel(runAsync), ClickActions {
 
     fun load() {
@@ -24,13 +25,12 @@ class DashboardViewModel(
         runAsync({
             repository.dashboardItems()
         }) {
-            it.map(mapper)
+            observable.updateUi(it.map(mapper))
         }
     }
 
     fun goToSettings() {
         navigation.updateUi(SettingsScreen)
-        clear.clear(this::class.java)
     }
 
     override fun retry() {
@@ -42,7 +42,7 @@ class DashboardViewModel(
             val split = delimiter.split(pair)
             repository.removePair(split.first, split.second)
         }) {
-            it.map(mapper)
+            observable.updateUi(it.map(mapper))
         }
     }
 

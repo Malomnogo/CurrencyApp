@@ -2,7 +2,6 @@ package com.malomnogo.presentation.premium
 
 import com.malomnogo.domain.premium.BuyPremiumResult
 import com.malomnogo.domain.premium.PremiumRepository
-import com.malomnogo.presentation.core.FakeClear
 import com.malomnogo.presentation.core.FakeNavigation
 import com.malomnogo.presentation.core.FakeRunAsync
 import com.malomnogo.presentation.core.UpdateUi
@@ -17,7 +16,6 @@ class PremiumViewModelTest {
     private lateinit var observable: FakeObservable
     private lateinit var navigation: FakeNavigation
     private lateinit var repository: FakeRepository
-    private lateinit var clear: FakeClear
     private lateinit var runAsync: FakeRunAsync
 
     @Before
@@ -25,13 +23,11 @@ class PremiumViewModelTest {
         repository = FakeRepository()
         observable = FakeObservable()
         navigation = FakeNavigation()
-        clear = FakeClear()
         runAsync = FakeRunAsync()
         viewModel = PremiumViewModel(
             repository = repository,
             observable = observable,
             navigation = navigation,
-            clear = clear,
             runAsync = runAsync
         )
     }
@@ -53,7 +49,6 @@ class PremiumViewModelTest {
         runAsync.returnResult()
 
         navigation.checkPop()
-        clear.checkCalled(PremiumViewModel::class.java)
     }
 
     @Test

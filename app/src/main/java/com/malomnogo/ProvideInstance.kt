@@ -18,13 +18,14 @@ import com.malomnogo.domain.premium.BuyPremiumResult
 import com.malomnogo.domain.premium.PremiumRepository
 import com.malomnogo.domain.premium.PremiumStorage
 import com.malomnogo.domain.settings.SettingsRepository
+import javax.inject.Inject
 
 interface ProvideInstance {
 
     fun provideLoadCurrenciesRepository(
         cloudDataSource: LoadCurrenciesCloudDataSource,
         cacheDataSource: CurrenciesCacheDataSource.Mutable,
-        provideResources: ProvideResources
+        handleError: HandleError.Base
     ): LoadCurrenciesRepository
 
     fun provideDashboardRepository(
@@ -46,16 +47,16 @@ interface ProvideInstance {
 
     fun provideMaxPairs(): Int
 
-    class Base : ProvideInstance {
+    class Base @Inject constructor() : ProvideInstance {
 
         override fun provideLoadCurrenciesRepository(
             cloudDataSource: LoadCurrenciesCloudDataSource,
             cacheDataSource: CurrenciesCacheDataSource.Mutable,
-            provideResources: ProvideResources
+            handleError: HandleError.Base
         ) = BaseLoadCurrenciesRepository(
             cacheDataSource = cacheDataSource,
             cloudDataSource = cloudDataSource,
-            provideResources = provideResources
+            handleError = handleError
         )
 
         override fun provideDashboardRepository(
@@ -85,12 +86,12 @@ interface ProvideInstance {
         override fun provideMaxPairs() = 5
     }
 
-    class Mock : ProvideInstance {
+    class Mock @Inject constructor() : ProvideInstance {
 
         override fun provideLoadCurrenciesRepository(
             cloudDataSource: LoadCurrenciesCloudDataSource,
             cacheDataSource: CurrenciesCacheDataSource.Mutable,
-            provideResources: ProvideResources
+            handleError: HandleError.Base
         ): LoadCurrenciesRepository = FakeLoadCurrenciesRepository()
 
         override fun provideDashboardRepository(

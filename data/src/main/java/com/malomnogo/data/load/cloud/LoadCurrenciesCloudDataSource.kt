@@ -1,15 +1,14 @@
 package com.malomnogo.data.load.cloud
 
-import retrofit2.Retrofit
+import javax.inject.Inject
 
 interface LoadCurrenciesCloudDataSource {
 
     suspend fun currencies(): HashMap<String, String>
 
-    class Base(private val currencyService: CurrencyService) : LoadCurrenciesCloudDataSource {
-        constructor(retrofit: Retrofit) : this(
-            retrofit.create(CurrencyService::class.java)
-        )
+    class Base @Inject constructor(
+        private val currencyService: CurrencyService
+    ) : LoadCurrenciesCloudDataSource {
 
         override suspend fun currencies() = currencyService.currencies().execute().body()!!
     }
