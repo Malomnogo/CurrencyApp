@@ -20,7 +20,7 @@ abstract class CoreModule {
 
     @Binds
     @Singleton
-    abstract fun bindProvideInstances(provideInstance: ProvideInstance.Mock): ProvideInstance
+    abstract fun bindProvideInstances(provideInstance: ProvideInstance.Base): ProvideInstance
 
     @Binds
     @Singleton

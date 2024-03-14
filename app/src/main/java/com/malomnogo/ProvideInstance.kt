@@ -1,5 +1,6 @@
 package com.malomnogo
 
+import com.malomnogo.data.core.ForegroundWrapper
 import com.malomnogo.data.core.HandleError
 import com.malomnogo.data.core.ProvideResources
 import com.malomnogo.data.currencies.cache.CurrenciesCacheDataSource
@@ -20,6 +21,7 @@ import javax.inject.Inject
 interface ProvideInstance {
 
     fun provideDashboardRepository(
+        foregroundWrapper: ForegroundWrapper,
         currencyPairCacheDataSource: CurrencyPairCacheDataSource.Base,
         currencyPairRatesDataSource: CurrencyPairRatesDataSource.Base,
         cloudDataSource: LoadCurrenciesCloudDataSource,
@@ -43,12 +45,14 @@ interface ProvideInstance {
     class Base @Inject constructor() : ProvideInstance {
 
         override fun provideDashboardRepository(
+            foregroundWrapper: ForegroundWrapper,
             currencyPairCacheDataSource: CurrencyPairCacheDataSource.Base,
             currencyPairRatesDataSource: CurrencyPairRatesDataSource.Base,
             cloudDataSource: LoadCurrenciesCloudDataSource,
             cacheDataSource: CurrenciesCacheDataSource.Mutable,
             handleError: HandleError.Base
         ) = BaseDashboardRepository(
+            foregroundWrapper = foregroundWrapper,
             cacheDataSource = currencyPairCacheDataSource,
             currencyPairRatesDataSource = currencyPairRatesDataSource,
             allCurrenciesCacheDataSource = cacheDataSource,
@@ -76,6 +80,7 @@ interface ProvideInstance {
     class Mock @Inject constructor() : ProvideInstance {
 
         override fun provideDashboardRepository(
+            foregroundWrapper: ForegroundWrapper,
             currencyPairCacheDataSource: CurrencyPairCacheDataSource.Base,
             currencyPairRatesDataSource: CurrencyPairRatesDataSource.Base,
             cloudDataSource: LoadCurrenciesCloudDataSource,
@@ -108,6 +113,7 @@ interface ProvideInstance {
                     error = false
                     DashboardResult.Error("No internet connection")
                 }
+
                 favoriteCurrencies.isEmpty() -> DashboardResult.Empty
                 else -> DashboardResult.Success(
                     favoriteCurrencies.map {
@@ -118,6 +124,10 @@ interface ProvideInstance {
             override suspend fun removePair(from: String, to: String): DashboardResult {
                 favoriteCurrencies.remove(Pair(from, to))
                 return dashboardItems()
+            }
+
+            override suspend fun loadDashboardItems(): DashboardResult {
+                TODO("Not yet implemented")
             }
         }
 

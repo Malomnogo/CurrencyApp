@@ -22,5 +22,10 @@ interface DashboardUiState {
 
     object Empty : Abstract(DashboardUi.Empty)
 
+    object Nothing : DashboardUiState {
+
+        override fun update(showList: ShowList) = Unit
+    }
+
     object Progress : Abstract(DashboardUi.Progress)
 }

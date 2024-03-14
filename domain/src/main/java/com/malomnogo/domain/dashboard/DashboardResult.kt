@@ -11,6 +11,8 @@ interface DashboardResult {
         fun mapError(message: String): T
 
         fun mapEmpty(): T
+
+        fun mapNothing(): T
     }
 
     data class Success(private val dashboardItems: List<DashboardItem>) : DashboardResult {
@@ -21,6 +23,13 @@ interface DashboardResult {
     data class Error(private val message: String) : DashboardResult {
 
         override fun <T : Any> map(mapper: Mapper<T>): T = mapper.mapError(message)
+    }
+
+    object NoDataYet : DashboardResult {
+
+        override fun <T : Any> map(mapper: Mapper<T>): T {
+            return mapper.mapNothing()
+        }
     }
 
     object Empty : DashboardResult {

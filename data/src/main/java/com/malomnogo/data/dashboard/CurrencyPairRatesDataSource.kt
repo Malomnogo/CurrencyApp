@@ -13,11 +13,18 @@ interface CurrencyPairRatesDataSource {
 
     suspend fun data(favoriteRates: List<CurrencyPairCache>): List<DashboardItem>
 
+    fun needUpdate(favoriteRates: List<CurrencyPairCache>): Boolean
+
     class Base @Inject constructor(
         private val currentTimeInMillis: CurrentTimeInMillis,
         private val updatedRateDataSource: UpdatedRateDataSource,
         private val dispatcher: CoroutineDispatcher = Dispatchers.IO
     ) : CurrencyPairRatesDataSource {
+
+        override fun needUpdate(favoriteRates: List<CurrencyPairCache>) =
+            favoriteRates.find { favoriteRate ->
+                favoriteRate.isNotFresh(currentTimeInMillis)
+            } != null
 
         override suspend fun data(favoriteRates: List<CurrencyPairCache>) =
             withContext(dispatcher) {

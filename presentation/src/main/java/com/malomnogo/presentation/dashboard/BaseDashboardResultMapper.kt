@@ -21,6 +21,8 @@ class BaseDashboardResultMapper @Inject constructor(
 
 
     override fun mapEmpty() = DashboardUiState.Empty
+
+    override fun mapNothing() = DashboardUiState.Nothing
 }
 
 class BaseDashboardItemMapper @Inject constructor(

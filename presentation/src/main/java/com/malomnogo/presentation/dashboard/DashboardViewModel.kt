@@ -1,5 +1,6 @@
 package com.malomnogo.presentation.dashboard
 
+import android.util.Log
 import com.malomnogo.domain.dashboard.DashboardRepository
 import com.malomnogo.domain.dashboard.DashboardResult
 import com.malomnogo.presentation.core.BaseViewModel
@@ -19,6 +20,18 @@ class DashboardViewModel @Inject constructor(
     private val mapper: DashboardResult.Mapper<DashboardUiState>,
     private val delimiter: Delimiter.Split
 ) : BaseViewModel(runAsync), ClickActions {
+
+    init {
+        Log.d("tag", "init")
+    }
+
+    suspend fun loadInternal() {
+        runAsync({
+            repository.loadDashboardItems()
+        }) {
+            observable.updateUi(it.map(mapper))
+        }
+    }
 
     fun load() {
         observable.updateUi(DashboardUiState.Progress)
